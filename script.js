@@ -103,9 +103,9 @@
         }
     }
 
-    // let personal1 = new Owner;
-    //     personal1.setName('Иван', 'Петров');
+    let personal1 = Owner;
+        personal1.setName('Иван', 'Петров');
 
-    // DataBase.setValue('user1', personal1.getUser());
+    DataBase.setValue('user1', personal1.getUser());
 
 })(window);
