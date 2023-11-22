@@ -30,7 +30,7 @@
          * @param {*} key 
          */
         removeValue: function(key) {
-            window.localStorage.removeItem(JSON.parse(key));
+            window.localStorage.removeItem(key);
         },
 
         /** Очистка базы */
@@ -52,6 +52,109 @@
             }
 
             return true;
+        }
+    }
+
+    var DOM = {
+        /**
+         * 
+         * @param {*} tagName 
+         * @param {className, attrs{}, styles{}, events{}, children[], inner} params 
+         * @returns 
+         */
+        create: function(tagName = '', params = {}) {
+            if(!tagName) 
+                return false;
+
+            let element = document.createElement(tagName);
+
+            if(params.className) {
+                let classList = params.className.split(' ');
+                for(let value of classList) {
+                    element.classList.add(value);
+                }
+            }
+
+            if(typeof params.attrs === 'object') {
+                for(let index in params.attrs) {
+                    element.setAttribute(index,  params.attrs[index]);
+                }
+            }
+
+            if(typeof params.styles === 'object') {
+                for(let i in params.styles) {
+                    element.style[i] = params.styles[i];
+                }
+            }
+
+            if(typeof params.events === 'object') {
+                for(let i in params.events) {
+                    element.addEventListener(i, params.events[i]);
+                }
+            }
+
+            if(typeof params.children === 'object' && params.children instanceof Array && !params.innerText) {
+                params.children.forEach(item => {
+                    element.append(item)
+                });
+            }
+
+            return element;
+        },
+
+        adjust: function(element = {}, params = {}) {
+            if(params.className) {
+                let classList = params.className.split(' ');
+                for(let value of classList) {
+                    element.classList.add(value);
+                }
+            }
+
+            if(typeof params.attrs === 'object') {
+                for(let index in params.attrs) {
+                    element.setAttribute(index,  params.attrs[index]);
+                }
+            }
+
+            if(typeof params.styles === 'object') {
+                for(let i in params.styles) {
+                    element.style[i] = params.styles[i];
+                }
+            }
+
+            if(typeof params.events === 'object') {
+                for(let i in params.events) {
+                    element.addEventListener(i, params.events[i]);
+                }
+            }
+
+            if(typeof params.children === 'object' && params.children instanceof Array && !params.innerText) {
+                params.children.forEach(item => {
+                    element.append(item)
+                });
+            }
+        },
+
+        removeStyles: function(element = {}) {
+            element.removeAttribute('style');
+        },
+
+        clearItem: function(element = {}, all = false) {
+            element.innerHTML = '';
+
+            if(all) {
+                DOM.removeStyles(element);
+                element.removeEventListener();
+            }
+        },
+
+        removeItem: function(element = {}, total = false) {
+            if(total) {
+                element.remove();
+            }
+            else {
+                DOM.clearItem(element, true);
+            }
         }
     }
 
@@ -103,73 +206,30 @@
         }
     }
 
-    let personal1 = Owner;
-        personal1.setName('Иван', 'Петров');
+    // let personal1 = Owner;
+    //     personal1.setName('Иван', 'Петров');
 
-    DataBase.setValue('user1', personal1.getUser());
+    // DataBase.setValue('user1', personal1.getUser());
+
+    let test = DOM.create('div', {
+        className: 'test some-class',
+        styles: {
+            display: 'block',
+            width: '100px',
+            height: '100px',
+            background: '#333'
+        },
+        events: {
+            click: function(event) {
+                console.log('good');
+            }
+        },
+        children: [
+            DOM.create('span')
+        ]
+    });
+
+    document.body.append(test);
+    console.log(test);
 
 })(window);
-
-
-'use strict';
-
-var DOM = {
-    create: function(tagName, params = {}) {
-        if(!tagName)
-            return false;
-
-        let element = document.createElement(tagName);
-
-        if(params.className) {
-            element.classList.add(params.className);
-        }
-
-        if(typeof params.attrs === 'object') {
-            for(let i in params.attrs) {
-                element.setAttribute(i, params.attrs[i]);
-            }
-        }
-
-        if(typeof params.styles === 'object') {
-            for(let i in params.styles) {
-                element.style[i] = params.styles[i];
-            }
-        }
-
-        if(typeof params.children === 'array') {
-            params.children.forEach(item => {
-                element.append(item);
-            });
-        }
-
-        if(typeof params.events === 'object') {
-            for(let i in params.events) {
-                element.addEventListener(i, params.events[i]);
-            }
-        }
-
-        return element;
-    }
-}
-
-let test = DOM.create('div', {
-    className: "test",
-    styles: {
-        color: '#330000',
-        width: '100px',
-        height: '100px',
-        display: 'block',
-        backgroundColor: '#333'
-    },
-    children: [
-        DOM.create('span'),
-        DOM.create('b')
-    ],
-    events: {
-        click: function() {
-            console.log('ya');
-        }
-    }
-});
-
-document.body.append(test);
