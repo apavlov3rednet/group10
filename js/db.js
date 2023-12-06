@@ -1,4 +1,4 @@
-export class DB 
+class DB 
 {
     static #DBNAME = 'mongodb'; // Имя базы данных
     static #LOCATION = 'mongodb://localhost'; //Адрес === 127.0.0.1
@@ -8,7 +8,7 @@ export class DB
 
     constructor() {}
 
-    initDb() {
+    static initDb() {
         /*
         const MongoClient = require(DB.#DBNAME).MongoClient;
         const url = [DB.#LOCATION, DB.#PORT].join(":"); // mongodb://localhost:27017

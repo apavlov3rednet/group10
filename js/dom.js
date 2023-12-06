@@ -1,4 +1,4 @@
-export class DOM {
+class DOM {
     static create(tagName = '', params = {}) {
         if(!tagName) 
             return false;
@@ -30,10 +30,15 @@ export class DOM {
             }
         }
 
-        if(typeof params.children === 'object' && params.children instanceof Array && !params.innerText) {
-            params.children.forEach(item => {
-                element.append(item)
-            });
+        if(params.text || params.html) {
+            element.innerHTML = params.html || params.text; //element.innerText
+        }
+        else {
+            if(typeof params.children === 'object' && params.children instanceof Array && !params.innerText) {
+                params.children.forEach(item => {
+                    element.append(item)
+                });
+            }
         }
 
         return element;
@@ -65,10 +70,15 @@ export class DOM {
             }
         }
 
-        if(typeof params.children === 'object' && params.children instanceof Array && !params.innerText) {
-            params.children.forEach(item => {
-                element.append(item)
-            });
+        if(params.text || params.html) {
+            element.innerHTML = params.html || params.text; //element.innerText
+        }
+        else {
+            if(typeof params.children === 'object' && params.children instanceof Array && !params.innerText) {
+                params.children.forEach(item => {
+                    element.append(item)
+                });
+            }
         }
     }
 

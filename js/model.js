@@ -1,10 +1,12 @@
-import {DB} from '/db.js';
+//import {DB} from '/db.js';
 
-export class Model {
+class Model {
     params = {};
+    id = Math.random(0,1000) * 100000; //Автоматически создаваемый ключ, autoincrement;
 
     constructor(params = {}) {
         this.params = {};
+        this.id = this.id;
 
         for(let i in params) {
             this.params[i] = params[i];
@@ -27,11 +29,11 @@ export class Model {
     }
 }
 
-let brand = new Model({tableName: 'brand', name: 'Opel', country: 'Germany'});
+// let brand = new Model({tableName: 'brand', name: 'Opel', country: 'Germany'});
 
-brand.set({parentCompany: 'VW Group'});
+// brand.set({parentCompany: 'VW Group'});
 
-brand.add(); // {tableName, name, country, parentCompany}
+// brand.add(); // {tableName, name, country, parentCompany}
 
 /*
 

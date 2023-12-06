@@ -10,7 +10,7 @@
     <div class="content">
         <h1>Single Page Application</h1>
 
-        <form action="" name="ADD_OWNER">
+        <form action="" name="ADD_OWNER" id="owner">
             <input type="text" name="NAME" placeholder="Имя">
             <input type="text" name="SECOND_NAME" placeholder="Отчество">
             <input type="text" name="LAST_NAME" placeholder="Фамилия">
@@ -21,12 +21,12 @@
     
         <br>
     
-        <form action="" name="ADD_CAR">
-            <select name="OWNER" id="owner">
+        <form action="" name="ADD_CAR" id="car">
+            <select name="OWNER">
                 <option value="default">Выбери</option>
             </select>
     
-            <select name="BRAND" id="brand">
+            <select name="BRAND">
                 <option value="Mersedes">Mersedes</option>
                 <option value="Opel">Opel</option>
                 <option value="BMW">BMW</option>
@@ -34,7 +34,7 @@
                 <option value="Nissan">Nissan</option>
             </select>
     
-            <select name="MODEL" id="model">
+            <select name="MODEL">
                 <option value="SLK500" data-brand="Mersedes">SLK500</option>
                 <option value="SLR_Maclaren" data-brand="Mersedes">SLR MacLaren</option>
                 <option value="S500" data-brand="Mersedes">S500</option>
@@ -53,9 +53,11 @@
             <button>Сохранить</button>
         </form>
     </div>
-    
 
-    <script src="script.js"></script>
-    <script src="js.js"></script>
+
+    <script src="/js/db.js"></script>
+    <script src="/js/dom.js"></script>
+    <script src="/js/model.js"></script>
+    <script src="/js/core.js"></script>
 </body>
 </html>
