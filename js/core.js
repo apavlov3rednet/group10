@@ -97,50 +97,6 @@
     ]);
     bindSendForm(obModelForm, arModel, "models", [selectModel]);
 
-    //   obOwnerForm.addEventListener("submit", function (event) {
-    //     event.preventDefault(); //Отменяем штатное поведение на событие
-
-    //     let arFields = obOwnerForm.querySelectorAll("input");
-
-    //     let owner = new Model();
-
-    //     arFields.forEach((item) => {
-    //       let params = {};
-    //       params[item.name] = item.value;
-    //       owner.set(params);
-    //     });
-
-    //     //Подготовка данных для БД
-    //     arOwner.push(owner);
-
-    //     //Сохранение в БД
-    //     DB.set("owners", arOwner);
-
-    //     updateList(selectOwner, arOwner);
-    //   });
-
-    //   obBrandForm.addEventListener("submit", function (event) {
-    //     event.preventDefault(); //Отменяем штатное поведение на событие
-
-    //     let arFields = obBrandForm.querySelectorAll("input");
-
-    //     let brand = new Model();
-
-    //     arFields.forEach((item) => {
-    //       let params = {};
-    //       params[item.name] = item.value;
-    //       brand.set(params);
-    //     });
-
-    //     //Подготовка данных для БД
-    //     arBrand.push(brand);
-
-    //     //Сохранение в БД
-    //     DB.set("brands", arBrand);
-
-    //     updateList(selectBrand, arBrand);
-    //   });
-
     //Формирование селектов при первой загрузке
     updateList(selectOwner, arOwner);
     updateList(selectBrand, arBrand);
