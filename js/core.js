@@ -7,6 +7,9 @@
     let obBrandForm = document.getElementById("brand");
     let obModelForm = document.getElementById("model");
 
+    //Меню
+    let menuList = document.body.querySelectorAll('menu li');
+
     //Получаем данные из БД
     let arOwner = DB.get("owners") || [];
     let arBrand = DB.get("brands") || [];
@@ -88,6 +91,15 @@
             let newArray = arModel.filter(item => item.params.BRAND === value);
             updateList(selectModel, newArray);
         }
+    });
+
+    let r = new Routing();
+    r.treeRoutes(menuList);
+
+    menuList.forEach((item, i) => {
+        item.addEventListener('click', function() {
+            r.getContent(i);
+        });
     });
 
     bindSendForm(obOwnerForm, arOwner, "owners", [selectOwner]);
