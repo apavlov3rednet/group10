@@ -102,6 +102,10 @@ class Routing
             Routing.ajax(url, {
                 method: "POST",
                 type: 'async',
+                headers: {
+                    'Access-Control-Allow-Origin' : '*',
+                    'Access-Control-Allow-Methods' : '*'
+                }
             });
         }
     }
