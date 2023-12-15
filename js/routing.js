@@ -66,7 +66,7 @@ class Routing
             console.log(xhr.response);
         }
         else {
-            console.error(`Error ${xhr.status}: ${xhr.statusText}`); // Error 404: Not found
+            console.error(`${url} Error ${xhr.status}: ${xhr.statusText}`); // Error 404: Not found
         }
        }
        
