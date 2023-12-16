@@ -12,7 +12,7 @@ class Routing
      * @param {*} url important
      * @param {method = GET*|POST, type = sync*|async, responseType = '', headers = [], data = {}} params options
      */
-    static ajax(url, params = {}) {
+    static ajaxOld(url, params = {}) {
        //Старт события XHR - XML HTTP Response
        let xhr = new XMLHttpRequest();
 
@@ -76,6 +76,29 @@ class Routing
        }
     }
 
+    static ajax(url, params = {}) {
+        let _this = this;
+        let content = fetch(url)
+            .then(response => {
+                return response.text();
+            })
+            .then(data => {
+                let route;
+                let view  = new View();
+
+                for(let i in params.routes) {
+                    if(params.routes[i].request === url) {
+                        route = params.routes[i];
+                    }
+                }
+
+                _this.setHeaders(route.url, route.name);
+                view.setContent(data);
+
+                return data;
+            });
+    }
+
     treeRoutes(menu = []) {
         menu.forEach((item, index) => {
             this.arRoutes[index] = {
@@ -92,22 +115,25 @@ class Routing
         } 
     }
 
-    getContent(id) {
+    getContent(id, params = {}) {
         let url = this.arRoutes[id].request || 'error';
 
         if(url === 'error') {
-            Routing.ajax(this.arRoutes.error)
+            //Routing.ajax(this.arRoutes.error)
         }
         else {
-            Routing.ajax(url, {
-                method: "POST",
-                type: 'async',
-                headers: {
-                    'Access-Control-Allow-Origin' : '*',
-                    'Access-Control-Allow-Methods' : '*'
-                }
-            });
+            Routing.ajax(url, params);
         }
+    }
+
+    static setHeaders(url, title) {
+        let tagTitle = document.querySelector('title');
+        let h1 = document.querySelector('h1');
+
+        tagTitle.innerText = title;
+        h1.innerText = title;
+
+        //history.pushState({page: 1}, title, url);
     }
 }
 

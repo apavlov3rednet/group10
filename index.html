@@ -18,75 +18,14 @@
             <li data-route="cards">Объекты</li>
         </menu>
 
-        <form action="" name="ADD_OWNER" id="owner">
-            <h2>Владелец</h2>
-            <input type="text" name="NAME" placeholder="Имя">
-            <input type="text" name="SECOND_NAME" placeholder="Отчество">
-            <input type="text" name="LAST_NAME" placeholder="Фамилия">
-            <input type="date" name="BD">
-    
-            <button>Сохранить</button>
-        </form>
-    
-        <br>
-
-        <form action="" name="BRAND" id="brand">
-            <h2>Бренд</h2>
-            <input type="text" name="NAME" placeholder="Название бренда">
-    
-            <button>Сохранить</button>
-        </form>
-    
-        <br>
-
-        <form action="" name="MODEL" id="model">
-            <h2>Модель</h2>
-            <select name="BRAND"></select>
-            <input type="text" name="NAME" placeholder="Название модели">
-    
-            <button>Сохранить</button>
-        </form>
-    
-        <br>
-    
-        <form action="" name="ADD_CAR" id="car">
-            <h2>Карточка собственности</h2>
-            <select name="OWNER">
-                <option value="default">Выбери</option>
-            </select>
-    
-            <select name="BRAND">
-                <option value="Mersedes">Mersedes</option>
-                <option value="Opel">Opel</option>
-                <option value="BMW">BMW</option>
-                <option value="Skoda">Skoda</option>
-                <option value="Nissan">Nissan</option>
-            </select>
-    
-            <select name="MODEL">
-                <option value="SLK500" data-brand="Mersedes">SLK500</option>
-                <option value="SLR_Maclaren" data-brand="Mersedes">SLR MacLaren</option>
-                <option value="S500" data-brand="Mersedes">S500</option>
-                <option value="Vectra" data-brand="Opel">Vectra</option>
-                <option value="Astra" data-brand="Opel">Astra</option>
-                <option value="M5" data-brand="BMW">M5</option>
-                <option value="Fabia" data-brand="Skoda">Fabia</option>
-                <option value="350Z" data-brand="Nissan">350Z</option>
-                <option value="370Z" data-brand="Nissan">370Z</option>
-                <option value="Patrol" data-brand="Nissan">Patrol</option>
-            </select>
-    
-            <input type="text" name="GOV_NUMBER" placeholder="Гос.Номер">
-            <input type="text" name="VIN" placeholder="VIN">
-    
-            <button>Сохранить</button>
-        </form>
+        <div id="content"></div>
     </div>
 
 
     <script src="/js/db.js"></script>
     <script src="/js/dom.js"></script>
     <script src="/js/model.js"></script>
+    <script src="/js/view.js"></script>
     <script src="/js/routing.js"></script>
     <script src="/js/core.js"></script>
 </body>
