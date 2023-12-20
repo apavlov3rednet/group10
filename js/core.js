@@ -6,13 +6,9 @@
     let r = new Routing();
     r.treeRoutes(menuList);
 
-    console.log(r);
-
     menuList.forEach((item, i) => {
         item.addEventListener('click', function() {
-            r.getContent(i, {
-                routes: r.arRoutes
-            });
+            r.getContent(i, View.setContent);
         });
     });
 })(window);

@@ -12,90 +12,28 @@ class Routing
      * @param {*} url important
      * @param {method = GET*|POST, type = sync*|async, responseType = '', headers = [], data = {}} params options
      */
-    static ajaxOld(url, params = {}) {
-       //Старт события XHR - XML HTTP Response
-       let xhr = new XMLHttpRequest();
-
-       //Определить метод запроса и его тип
-       let method = params.method || 'GET';
-       let type = params.type === 'async';
-
-       xhr.open(method, url, type);
-
-       //Тип возвращаемых данных
-       if(type) {
-        /**
-         * text === ''
-         * arraybuffer
-         * blob
-         * document - xml, yml, XPath
-         * json
-         */
-        xhr.responseType = (params.responseType) ? params.responseType : '';
-       }
-       
-       //Загаловки
-       if(params.headers && params.headers instanceof Array) {
-        params.headers.forEach((item, index) => xhr.setRequestHeader(index, item));
-        //xhr.setRequestHeader('Content-Type', 'applictaion/json');
-       }
-
-       //Отправка запроса
-       if(params.data && Object.keys(params.data).length > 0) {
-        xhr.send(params.data);
-       }
-       else {
-        xhr.send();
-       }
-
-       //Прогресс выполнения запроса
-       xhr.onprogress = function(event) {
-        console.log(event);
-       }
-
-       //Результат обращения к серверу
-       xhr.onload = function() {
-        /**
-         * 100 - 120 - ошибки которые происходят на стороне физического сервера
-         * 200 - 226 - положительные ответы, 203 - положительным ответом, но которому нельзя доверять
-         * 300 - 308 - редиректы, 304 - файл был не изменен относительно последнего запроса
-         * 400 - 499 - ошибки клиента, приложения
-         * 500 - 526 - ошибки сервера или его запреты
-         */
-        if(xhr.status >= 200 && xhr.status < 300) {
-            console.log(xhr.response);
-        }
-        else {
-            console.error(`${url} Error ${xhr.status}: ${xhr.statusText}`); // Error 404: Not found
-        }
-       }
-       
-       //Отлов ошибок
-       xhr.onerror = function(event) {
-        console.error(event);
-       }
-    }
-
     static ajax(url, params = {}) {
-        let _this = this;
-        let content = fetch(url)
+        fetch(url)
             .then(response => {
+                if(params.type == 'json')
+                    return response.json();
+
+                if(params.type == 'blob')
+                    return response.blob() || response.arrayBuffer();
+
                 return response.text();
             })
-            .then(data => {
-                let route;
-                let view  = new View();
+            .then(answer => {
+                if(params.onsuccess && params.onsuccess instanceof Function) {
+                    let data = params;
 
-                for(let i in params.routes) {
-                    if(params.routes[i].request === url) {
-                        route = params.routes[i];
-                    }
+                    if(answer != '')
+                        data.answer = answer;
+
+                    params.onsuccess(data);
+                    return true;
                 }
-
-                _this.setHeaders(route.url, route.name);
-                view.setContent(data);
-
-                return data;
+                else return answer;
             });
     }
 
@@ -115,24 +53,27 @@ class Routing
         } 
     }
 
-    getContent(id, params = {}) {
+    /**
+     * 
+     * @param {*} id 
+     * @param {*} callback Function
+     */
+    getContent(id, callback) {
         let url = this.arRoutes[id].request || 'error';
+        let title = this.arRoutes[id].name;
+        let pageUrl = this.arRoutes[id].url;
 
-        if(url === 'error') {
-            //Routing.ajax(this.arRoutes.error)
+        if(url !== 'error') {
+            Routing.ajax(url, {
+                title: title,
+                onsuccess: callback
+            });
         }
-        else {
-            Routing.ajax(url, params);
-        }
+
+        Routing.setUrl(pageUrl, title);
     }
 
-    static setHeaders(url, title) {
-        let tagTitle = document.querySelector('title');
-        let h1 = document.querySelector('h1');
-
-        tagTitle.innerText = title;
-        h1.innerText = title;
-
+    static setUrl(url, title) {
         //history.pushState({page: 1}, title, url);
     }
 }

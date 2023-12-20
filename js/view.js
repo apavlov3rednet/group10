@@ -1,29 +1,38 @@
 class View {
-    constructor() {
-        this.obContent = document.getElementById('content');
-    }
+    static setContent(data = {}) {
+        let obContent = document.getElementById('content');
+        let obH1 = document.querySelector('h1');
+        let obTitle = document.querySelector('title');
 
-    setContent(content) {
-        let _this = this;
-        this.obContent.innerHTML = content;
+        obH1.innerHTML = data.title;
+        obTitle.innerHTML = data.title;
+        obContent.innerHTML = data.answer;
 
-        let obForm = this.obContent.querySelector('form');
+        let obForm = obContent.querySelector('form');
+
         if(obForm) {
             let dbName = obForm.id;
             let db = DB.get(dbName) || [];
             let arSelect = obForm.querySelectorAll('select');
 
-            _this.bindSendForm(obForm, db, dbName, arSelect);
+            View.bindSendForm(obForm, db, dbName);
 
             arSelect.forEach(item => {
                 let name = item.getAttribute('name').toLowerCase() + 's';
                 let db2 =  DB.get(name) || [];
-                _this.updateList(item, db2);
+                View.updateList(item, db2);
             });
         }
     }
 
-    bindSendForm(obForm, arr, db, callback = []) {
+    /**
+     * 
+     * @param {*} obForm 
+     * @param {*} arr 
+     * @param {*} db 
+     * @param {*} callback Function
+     */
+    static bindSendForm(obForm, arr, db, callback) {
         obForm.addEventListener("submit", function (event) {
             event.preventDefault();
 
@@ -49,12 +58,10 @@ class View {
             arr.push(model);
 
             DB.set(db, arr);
-
-            callback.forEach((item) => updateList(item, arr));
         });
     }
 
-    updateList(select, arr, title = "Выберите") {
+    static updateList(select, arr, title = "Выберите") {
         let childrens = [];
 
         select.innerHTML = "";
