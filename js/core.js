@@ -35,7 +35,5 @@
 
     content.append(table);
 
-    console.log(db);
-
 
 })(window);

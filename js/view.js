@@ -86,6 +86,19 @@ class View {
 
         DOM.adjust(select, {
             children: childrens,
+            events: {
+                //Стартуем отслеживание события Изменение поля
+                change: function(event) {
+                    if(select.dataset.rel) { //Проверяем есть ли связанное поле
+                        let id = select.value; //Получаем значение текущего поля
+                        let relationSelect = document.querySelector('[name='+select.dataset.rel+']'); //Получаем объект связанного поля
+                        let dbName = relationSelect.getAttribute('name').toLowerCase() + 's'; //Получаем имя БД связанного поля
+                        let arDb = DB.get(dbName).filter(item => item.params[select.getAttribute('name')] === id) || []; //Получаем только те записи из БД которые соответствуют значению текущего поля
+
+                        View.updateList(relationSelect, arDb); //Обновляем связанное поле
+                    }
+                }
+            }
         });
     }
 }
