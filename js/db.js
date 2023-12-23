@@ -51,6 +51,14 @@ class DB
         return value;
     }
 
+    static count(key) {
+        let values = DB.get(key);
+        if(values instanceof Array)
+            return values.length;
+
+        return 0;
+    }
+
     static isJson(str) {
         try {
             JSON.parse(str);
