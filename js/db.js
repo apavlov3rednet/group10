@@ -27,8 +27,19 @@ class DB
         }
 
         window.localStorage.setItem(key, JSON.stringify(value));
+
+        if(key != 'sim')
+            DB.setIds(key, value.at(-1));
+        
+
         //this.mongoClient.close();
         // return id;
+    }
+
+    static setIds(key, value) {
+        let cur = DB.get('sim') || {};
+        cur[value.id] = key;
+        DB.set('sim', cur);
     }
 
     static remove(key) {
@@ -50,6 +61,16 @@ class DB
         }
         return value;
     }
+
+    static getById(id) {
+        let simDB = DB.get('sim');
+
+        if(simDB[id]) {
+            console.log('true');
+        }
+
+        return id;
+    } 
 
     static count(key) {
         let values = DB.get(key);

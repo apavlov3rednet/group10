@@ -63,8 +63,23 @@ class Table extends DOM {
             if(row instanceof Array) {
                 let obRow, arRowChild = [];
 
-                row.forEach(item => {
-                    arRowChild.push(Table.create('td', {text: item}))
+                row.forEach((item, index) => {
+                    let reg = new RegExp('^[0-9]{1,5}[\.]{1}[0-9]+$');
+                    let str;
+
+                    if(String(item).match(reg)) {
+                        if(index === 0) {
+                            str = String(item).slice(0,7) + '...';
+                        }
+                        else {
+                            str = DB.getById(item);
+                        }
+                    }
+                    else {
+                        str = item;
+                    }
+
+                    arRowChild.push(Table.create('td', {text: str}))
                 });
 
                 obRow = Table.create('tr', {

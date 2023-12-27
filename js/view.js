@@ -1,6 +1,6 @@
 class View {
     static setContent(data = {}) {
-        let obContent = document.getElementById('content');
+        let obContent = document.getElementById('form');
         let obH1 = document.querySelector('h1');
         let obTitle = document.querySelector('title');
 
@@ -16,6 +16,7 @@ class View {
             let arSelect = obForm.querySelectorAll('select');
 
             View.bindSendForm(obForm, db, dbName);
+            View.setTable(dbName);
 
             arSelect.forEach(item => {
                 let name = item.getAttribute('name').toLowerCase() + 's';
@@ -23,6 +24,40 @@ class View {
                 View.updateList(item, db2);
             });
         }
+    }
+
+    static setTable(baseName) {
+        let dbValues = DB.get(baseName) || [];
+        let data = [];
+        let arHead = [];
+        let obContent = document.getElementById('content');
+
+        if(dbValues instanceof Array) {
+            dbValues.forEach((item, index) => {
+                let row = [];
+
+                row.push(item.id);
+
+                if(index === 0)
+                    arHead.push('ID');
+
+                for(let i in item.params) {
+                    row.push(item.params[i]);
+
+                    if(index===0)
+                        arHead.push(Loc.getMessage(i));
+                }
+
+                data.push(row);
+            });
+        }
+
+        let table = Table.generate(arHead, data, [], {
+            className: 'simple-table'
+        });
+
+        DOM.clearItem(obContent);
+        DOM.adjust(obContent, { children: [table]});
     }
 
     /**
@@ -58,6 +93,7 @@ class View {
             arr.push(model);
 
             DB.set(db, arr);
+            View.setTable(db);
         });
     }
 
@@ -100,5 +136,12 @@ class View {
                 }
             }
         });
+    }
+
+    static setMulti(nameTotal, var1, var2) {
+        let obTotal = document.querySelector('[name='+nameTotal+']');
+        let obVar1 = document.querySelector('[name='+var1+']');
+
+        obTotal.value = obVar1.value * var2.value;
     }
 }
