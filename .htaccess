@@ -1,3 +1,16 @@
-RewriteEngine on
-RewriteEngine %{REQUEST_URI} ^/views/owners/?.*$
-RewriteEngine %{REQUEST_URI} =GET
+#Подключение mod_rewrite
+Options +FollowSymLinks 
+RewriteEngine On
+
+#ErrorDocument 404 /404
+
+<IfModule mod_rewrite.c>
+    Options +FollowSymLinks
+    RewriteEngine On
+
+    #conditions
+    #RewriteCond %{REQUEST_FILENAME} !/urlrewrite.php$
+    #RewriteRule ^(.*)$ /urlrewrite.php [L]
+
+    #RedirectMatch 301 (.*) /views/$1
+</IfModule>

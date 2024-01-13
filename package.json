@@ -1,0 +1,19 @@
+{
+  "name": "group10",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js:/RunTest",
+    "start" : "node index.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "composer": "^4.1.0",
+    "mongodb": "6.0",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "description": ""
+}
