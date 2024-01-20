@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "node index.js:/RunTest",
-    "start" : "node index.js"
+    "start": "node index.js",
+    "startMongo": "node js/mongodb.js"
   },
   "author": "",
   "license": "MIT",
@@ -13,7 +14,6 @@
     "mongodb": "6.0",
     "react": "^18.2.0"
   },
-  "devDependencies": {},
   "keywords": [],
   "description": ""
 }
