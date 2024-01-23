@@ -1,6 +1,6 @@
 const { ObjectId } = require("mongodb");
 
-class DB 
+class MongoDB 
 {
     static #DBNAME = 'group10'; // Имя базы данных
     static #LOCATION = 'mongodb://localhost'; //Адрес === 127.0.0.1
@@ -146,3 +146,5 @@ class DB
         return true;
     }
 }
+
+window.MDB = new MongoDB()
