@@ -5,13 +5,15 @@
   "scripts": {
     "test": "node index.js:/RunTest",
     "start": "node index.js",
-    "startMongo": "node js/mongodb.js"
+    "startMongo": "node js/mongodb.js",
+    "log": "node server/app"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
     "composer": "^4.1.0",
     "mongodb": "6.0",
+    "mongoose": "^8.1.0",
     "react": "^18.2.0"
   },
   "keywords": [],
