@@ -147,4 +147,4 @@ class MongoDB
     }
 }
 
-window.MDB = new MongoDB()
+module.exports = MongoDB;

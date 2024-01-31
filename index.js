@@ -1,21 +1,85 @@
-const EventEmitter = require('events');
+//Подключаем нативный модуль
+const http = require('http');
 
-const {Logger, userName} = require('./server/log');
+//Подключаем модуль файловой системы
+const fs = require('fs');
+const path = require('path');
+const express = require('express');
 
-// emitter.on('some_events', (arg) => {
-//     const {id, key} = arg;
-//     console.log(id, key);
-// });
+const PORT = 8084;
 
-// log('Test log');
-// emitter.emit('some_events', {id: 10, key: 'Test'});
-// console.log('Console');
+//Myme Type
+const mymeType = {
+    '.html' : 'text/html',
+    '.tmpl' : 'text/html',
+    '.js' : 'text/javascript',
+    '.png' : 'image/png', //jpg, jpeg
+    '.jpg' : 'image/jpg', //jpeg
+    '.svg' : 'image/svg+xml',
+    '.woff' : 'application/font-woff', //ttf
+    '.eot' : 'application/vnd.ms-fontobject'
+}
 
-const logger = new Logger();
+const staticFile = (res, filePath, ext = '.html') => {
+    let params = {};
+    if(mymeType[ext].match('text/')) {
+        params = {encoding: 'utf8', flag: 'r'};
+    }
 
-console.log('app.js');
+    fs.readFile('.' + filePath, params, (err, data) => {
+        if(err) {
+            console.log(err);
+            res.statusCode = 404;
+            res.end();
+        }
 
-logger.on('some_events', (arg) => {
-         const {id, key} = arg;
-         console.log(id, key);
-}).log('Log.js ' + userName);
+        res.setHeader('Content-Type', mymeType[ext]);
+        res.end(data);
+    });
+}
+
+const server = http.createServer(function(req, res) { //req - request, res - response
+    console.log('Server request');
+
+    //mechanism
+    const createPath = (page) => path.resolve(__dirname, 'views', `${page}.html`);
+
+    let basePath = '';
+    const url = req.url;
+
+    switch(url) {
+        case '/':
+            basePath = '/index.html';
+        break;
+
+        case '/index.html':
+            res.statusCode = 301; //Контролируемый редирект
+            res.setHeader('Location', '/');
+        break;
+
+        case '/brands/':
+            basePath = createPath('brands');
+        break;
+
+        default:
+            const extname = String(path.extname(url)).toLowerCase();
+            if(extname in mymeType) {
+                staticFile(res, url, extname);
+            }
+            else {
+                basePath = createPath('404');
+                res.statusCode = 404;
+                res.end();
+            }
+        break;
+    }
+
+    if(basePath != '') {
+        staticFile(res, basePath);
+    }
+
+});
+
+server.listen(PORT, "localhost", function(err) {
+    (err) ? console.log(err) : console.log('Server listen');
+});

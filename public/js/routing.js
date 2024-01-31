@@ -3,7 +3,7 @@ class Routing
     constructor() {
         this.dirViews = '/views/';
         this.arRoutes = {};
-        this.ext = '.tmpl';
+        this.ext = '.html';
         this.error404 = '404';
     }
 
@@ -74,7 +74,7 @@ class Routing
     }
 
     static setUrl(url, title) {
-        //history.pushState({page: 1}, title, url);
+        history.pushState({page: 1}, title, url);
     }
 }
 

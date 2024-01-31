@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPA-приложение</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <div class="content">
-        <h1>Single Page Application</h1>
+        <h1>Brands</h1>
 
         <menu>
             <li data-route="owners">Владельцы</li>
@@ -18,7 +18,14 @@
             <li data-route="cards">Объекты</li>
         </menu>
 
-        <div id="form"></div>
+        <div id="form">
+            <form action="" name="BRAND" id="brands">
+                <h2>Бренд</h2>
+                <input type="text" name="NAME" placeholder="Название бренда">
+        
+                <button>Сохранить</button>
+            </form>
+        </div>
         <div id="content"></div>
     </div>
 
