@@ -1,4 +1,4 @@
-const { ObjectId } = require("mongodb");
+const MongoClient = require('mongodb').MongoClient;
 
 class MongoDB 
 {
@@ -10,17 +10,30 @@ class MongoDB
 
     constructor() {}
 
-    static initDb() {
-        const MongoClient = require(DB.#DBNAME).MongoClient;
-        const url = [DB.#LOCATION, DB.#PORT].join(":"); // mongodb://localhost:27017
-
-        this.mongoClient = new MongoClient(url);
-        this.client = this.mongoClient.connect(); //login & password
-        this.db = client.db(DB.#DBNAME);
+    Init() {
+        console.info('start DB connect');
+        const url = [MongoDB.#LOCATION, MongoDB.#PORT].join(':') + '/';
+        this.client = new MongoClient(url);
+        this.db = this.client.db(MongoDB.#DBNAME);
+        console.info('DB connect success');
     }
 
-    static issetCollection(collectionName) {
-        this.initDb();
+    async count(collectionName) {
+        try {
+            if(collectionName != "") {
+                const collection = this.db.collection(collectionName);
+                const count = await collection.countDocuments();
+                console.log(count);
+                return count;
+            }
+        }
+        catch(e) {
+            console.log(e);
+        }
+    }
+
+    issetCollection(collectionName) {
+        this.Init();
 
         let result = false;
         if(collectionName != "") {
@@ -31,14 +44,14 @@ class MongoDB
         return result;
     }
 
-    static createCollection(collectionName, props = {}) {
+    createCollection(collectionName, props = {}) {
         if(collectionName === "")
             return false;
 
         let isset = this.issetCollection(collectionName);
 
         if(!isset) {
-            this.initDb();
+            this.Init();
 
             let collection = this.db.createCollection(collectionName, props);
             this.mongoClient.close();
@@ -48,18 +61,15 @@ class MongoDB
         return false;
     }
 
-    static set(collectionName, props = {}) {
-        let id = 0;
-        this.initDb();
-
+    async set(collectionName, props = {}) {
         if(collectionName == "" || Object.keys(props).length === 0) {
             this.mongoClient.close();
             return false;
         }
 
-        id = this.db[collectionName].insertOne(props); //db.collectionName
-        this.mongoClient.close();
-        return id;
+        let collection = this.db.collection(collectionName);
+
+        return await collection.insertOne(props); //db.collectionName
     }
 
     /**
@@ -67,7 +77,7 @@ class MongoDB
      * @param {*} collectionName 
      * @param {*} _id 
      */
-    static remove(collectionName, _id = ObjectId) {
+    remove(collectionName, _id = ObjectId) {
         if(collectionName == "") {
             return false;
         }
@@ -96,16 +106,16 @@ class MongoDB
      * @param {*} pageCount 
      * @returns 
      */
-    static get(collectionName, filter = {}, select = [], limit = 0, pageCount = 0) {
+    async get(collectionName, filter = {}, select = [], limit = 0, pageCount = 0) {
         let ob = null;
-        this.initDb();
+        this.Init();
 
         if(collectionName == "") {
             this.mongoClient.close();
             return false;
         }
 
-        let collection = this.db.getCollection(collectionName);
+        let collection = this.db.collection(collectionName);
         let request = [filter];
 
         if(select.length > 0) {
@@ -116,22 +126,8 @@ class MongoDB
             request.push(arSelect); // request = [filter, arSelect];
         }
 
-        ob = collection.find(...request).limit(limit).skip(pageCount); // ...find(filter, select) ...
-
-        this.mongoClient.close();
-
+        ob = await collection.find(...request).toArray();//.limit(limit).skip(pageCount); // ...find(filter, select) ...
         return ob;
-    }
-
-    static count(collectionName) {
-        this.initDb();
-        let result = 0;
-
-        if(collectionName != "") {
-            result = this.db[collectionName].count();
-        }
-        this.mongoClient.close();
-        return result;
     }
 
     static isJson(str) {

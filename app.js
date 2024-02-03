@@ -3,9 +3,28 @@ const morgan = require('morgan');
 const path = require('path');
 const MongoDB = require('./server/mongodb');
 
+//const MongoClient = require('mongodb').MongoClient;
+
 const app = express();
+const mdb = new MongoDB();
 
 const PORT = 8090;
+
+mdb.Init();
+
+// let c = mdb.count('brands');
+// console.log(c);
+
+// const client = new MongoClient('mongodb://localhost:27017/');
+
+// client.connect().then(mongoClient => {
+//     console.log('DB start connect');
+//     console.log(mongoClient.options.dbName);
+//     const db = mongoClient.db('group10');
+//     const collection = db.collection('brands');
+//     console.log(collection);
+// });
+
 
 const createPath = (page) => path.resolve(__dirname, 'views', `${page}.html`);
 
@@ -28,9 +47,13 @@ app.get('/index.html', (req, res) => {
     res.redirect('/');
 });
 
-app.get('/:section/', (req,res) => {
+app.get('/:section/', async (req,res) => {
     const title = req.params.section;
     res.sendFile(createPath(req.params.section), {title});
+
+    let list = await mdb.get(req.params.section);
+    console.log(list);
+
 });
 
 app.get('/views/:section.html', (req, res) => {
@@ -44,12 +67,15 @@ app.get('/:section/:page/', (req,res) => {
 });
 
 //POST request
-app.post('/:section/', (req,res) => { //request, response
+app.post('/:section/', async (req,res) => { //request, response
     const title = req.params.section;
-
-    console.log(req.body);
-
     res.sendFile(createPath(req.params.section), {title});
+
+    let result = await mdb.set(req.params.section, req.body);
+    console.log(result);
+
+    let list = await mdb.get(req.params.section);
+    console.log(list);
 });
 
 //Обработка ошибок, всегда вызываем самым последним
