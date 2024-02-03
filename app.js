@@ -17,7 +17,8 @@ app.use(express.urlencoded({extended : true})); //возвращает корр�
 
 app.use(express.static('public'));
 
-app.get('/', (req,res) => {
+//GET request
+app.get('/', (req, res) => {
     const title = 'Index';
     res.sendFile(createPath('index'), {title});
 });
@@ -32,8 +33,22 @@ app.get('/:section/', (req,res) => {
     res.sendFile(createPath(req.params.section), {title});
 });
 
+app.get('/views/:section.html', (req, res) => {
+    const title = req.params.section;
+    res.sendFile(createPath(req.params.section), {title});
+});
+
 app.get('/:section/:page/', (req,res) => {
     const title = req.params.section;
+    res.sendFile(createPath(req.params.section), {title});
+});
+
+//POST request
+app.post('/:section/', (req,res) => { //request, response
+    const title = req.params.section;
+
+    console.log(req.body);
+
     res.sendFile(createPath(req.params.section), {title});
 });
 

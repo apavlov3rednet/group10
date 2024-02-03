@@ -1,0 +1,19 @@
+[{
+  "_id": {
+    "$oid": "65abe98fcdd3e3eb8236b50b"
+  },
+  "TITLE": "Prime",
+  "BRAND": "Crown"
+},
+{
+  "_id": {
+    "$oid": "65abeac1cdd3e3eb8236b50c"
+  },
+  "TITLE": "X5",
+  "BRAND": {
+    "$ref": "brands",
+    "$id": {
+      "$oid": "65a7773bcd85224383362a74"
+    }
+  }
+}]

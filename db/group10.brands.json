@@ -1,0 +1,188 @@
+[{
+  "_id": {
+    "$oid": "65a7f00e44900e433dc9df97"
+  },
+  "TITLE": "Lexus",
+  "PARENT_COMPANY": "Toyota Motor Corporation",
+  "BUDGET": 1530000,
+  "COUNTRY": "France"
+},
+{
+  "_id": {
+    "$oid": "65a7f151343c3171a72bfc1f"
+  },
+  "TITLE": "Scion",
+  "PARENT_COMPANY": "Toyota Motor Corporation",
+  "BUDGET": 230000,
+  "COUNTRY": "Japan"
+},
+{
+  "_id": {
+    "$oid": "65a7f273343c3171a72bfc20"
+  },
+  "TITLE": "Jaguar",
+  "PARENT_COMPANY": "Tata Motors",
+  "BUDGET": 5000000,
+  "COUNTRY": "England"
+},
+{
+  "_id": {
+    "$oid": "65a7f273343c3171a72bfc21"
+  },
+  "TITLE": "Land Rover",
+  "PARENT_COMPANY": "Tata Motors",
+  "BUDGET": 4500000,
+  "COUNTRY": "England"
+},
+{
+  "_id": {
+    "$oid": "65a7773bcd85224383362a74"
+  },
+  "TITLE": "BMW",
+  "COUNTRY": "Germany",
+  "PARENT_COMPANY": "Volkswagen Group"
+},
+{
+  "_id": {
+    "$oid": "65a777dfcd85224383362a75"
+  },
+  "TITLE": "Opel",
+  "COUNTRY": "Germany",
+  "PARENT_COMPANY": "Volkswagen Group"
+},
+{
+  "_id": {
+    "$oid": "65a777dfcd85224383362a76"
+  },
+  "TITLE": "Lada",
+  "COUNTRY": "Russia",
+  "BUDGET": 350000,
+  "PARENT_COMPANY": "ВАЗ"
+},
+{
+  "_id": {
+    "$oid": "65a7782bcd85224383362a77"
+  },
+  "TITLE": "Mercedes",
+  "COUNTRY": "Germany",
+  "PARENT_COMPANY": "Volkswagen Group"
+},
+{
+  "_id": {
+    "$oid": "65a7782bcd85224383362a78"
+  },
+  "TITLE": "Ferrari",
+  "COUNTRY": "Italy"
+},
+{
+  "_id": {
+    "$oid": "65a77867cd85224383362a79"
+  },
+  "TITLE": "Lamborghiny",
+  "COUNTRY": "Italy",
+  "BUDGET": 1000000
+},
+{
+  "_id": {
+    "$oid": "65a779dacd85224383362a7a"
+  },
+  "TITLE": "Chery",
+  "COUNTRY": "China",
+  "BUDGET": 2000000
+},
+{
+  "_id": {
+    "$oid": "65a779eacd85224383362a7b"
+  },
+  "TITLE": "Great Wall",
+  "COUNTRY": "China",
+  "BUDGET": 2300000
+},
+{
+  "_id": {
+    "$oid": "65a77a18cd85224383362a7c"
+  },
+  "TITLE": "Omoda",
+  "PARENT_COMPANY": "Chery",
+  "COUNTRY": "China",
+  "BUDGET": 1800000
+},
+{
+  "_id": {
+    "$oid": "65a77a40cd85224383362a7d"
+  },
+  "TITLE": "Audi",
+  "PARENT_COMPANY": "Volkswagen Group",
+  "COUNTRY": "Germany",
+  "BUDGET": 1950000
+},
+{
+  "_id": {
+    "$oid": "65a77a54cd85224383362a7e"
+  },
+  "TITLE": "Skoda",
+  "PARENT_COMPANY": "Volkswagen Group",
+  "COUNTRY": "Swiden",
+  "BUDGET": 1959000
+},
+{
+  "_id": {
+    "$oid": "65a77a6ccd85224383362a7f"
+  },
+  "TITLE": "Bently",
+  "PARENT_COMPANY": "Volkswagen Group",
+  "COUNTRY": "England",
+  "BUDGET": 3959000
+},
+{
+  "_id": {
+    "$oid": "65a77a7fcd85224383362a80"
+  },
+  "TITLE": "SEAT",
+  "PARENT_COMPANY": "Volkswagen Group",
+  "COUNTRY": "England",
+  "BUDGET": 3349000
+},
+{
+  "_id": {
+    "$oid": "65a77a96cd85224383362a81"
+  },
+  "TITLE": "Suzuki",
+  "PARENT_COMPANY": "Volkswagen Group",
+  "COUNTRY": "South Korea",
+  "BUDGET": 1349000
+},
+{
+  "_id": {
+    "$oid": "65a77abbcd85224383362a82"
+  },
+  "TITLE": "RAM",
+  "PARENT_COMPANY": "Fiat Chrysler Automobiles",
+  "COUNTRY": "USA",
+  "BUDGET": 1249000
+},
+{
+  "_id": {
+    "$oid": "65a77ad9cd85224383362a83"
+  },
+  "TITLE": "Masserati",
+  "PARENT_COMPANY": "Fiat Chrysler Automobiles",
+  "COUNTRY": "Italy",
+  "BUDGET": 4249000
+},
+{
+  "_id": {
+    "$oid": "65a77af8cd85224383362a84"
+  },
+  "TITLE": "Cadillac",
+  "PARENT_COMPANY": "General Motors",
+  "COUNTRY": "USA",
+  "BUDGET": 2256000
+},
+{
+  "_id": "Crown",
+  "TITLE": "Crown",
+  "PARENT_COMPANY": "Toyota Motor Corporation",
+  "BUDGET": 10000000,
+  "COUNTRY": "Japan"
+}]
