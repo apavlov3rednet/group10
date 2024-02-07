@@ -2,6 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
 const MongoDB = require('./server/mongodb');
+const { ObjectId } = require('mongodb');
+const controllSchema = require('./server/schema');
 
 //const MongoClient = require('mongodb').MongoClient;
 
@@ -68,14 +70,19 @@ app.get('/:section/:page/', (req,res) => {
 
 //POST request
 app.post('/:section/', async (req,res) => { //request, response
-    const title = req.params.section;
-    res.sendFile(createPath(req.params.section), {title});
 
-    let result = await mdb.set(req.params.section, req.body);
-    console.log(result);
+    let schema = require('./server/schema/' + req.params.section);
+    let data = controllSchema(req.body, schema);
 
-    let list = await mdb.get(req.params.section);
-    console.log(list);
+    let result = await mdb.set(req.params.section, data);    
+
+    if(result.insertedId instanceof ObjectId) {
+        res.redirect(req.url + '?success=Y');
+    }
+    else {
+        res.redirect(req.url + '?success=N');
+    }
+    
 });
 
 //Обработка ошибок, всегда вызываем самым последним

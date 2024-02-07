@@ -1,15 +1,21 @@
-const { DBRef } = require('mongodb');
-const MongoClient = require('../mongodb');
-
-const Brands = {
+const brands = {
     TITLE: {
         require: true,
         type: 'String'
     },
-    BRAND: {
-        require: true,
-        type: DBRef()
+    PARENT_COMPANY: {
+        require: false,
+        type: 'String'
+    },
+    BUDGET: {
+        require: false,
+        type: 'Number',
+        validate: true
+    },
+    COUNTRY: {
+        require: false,
+        type: 'String'
     }
 }
 
-module.exports = Brands;
+module.exports = brands;

@@ -69,7 +69,9 @@ class MongoDB
 
         let collection = this.db.collection(collectionName);
 
-        return await collection.insertOne(props); //db.collectionName
+        let result = await collection.insertOne(props); //db.collectionName
+
+        return result;
     }
 
     /**
@@ -107,7 +109,6 @@ class MongoDB
      * @returns 
      */
     async get(collectionName, filter = {}, select = [], limit = 0, pageCount = 0) {
-        let ob = null;
         this.Init();
 
         if(collectionName == "") {
@@ -126,8 +127,22 @@ class MongoDB
             request.push(arSelect); // request = [filter, arSelect];
         }
 
-        ob = await collection.find(...request).toArray();//.limit(limit).skip(pageCount); // ...find(filter, select) ...
-        return ob;
+        /**
+         * todo: переписать
+        this.db.runCommand({
+            find: collectionName,
+            filter: {},
+            sort: {},
+            limit: int,
+            skip: int,
+            returnKey: Boolean,
+            awaitData: Boolean,
+            let: <document>
+        });
+        */
+
+        let result = await collection.find(...request).toArray();//.limit(limit).skip(pageCount); // ...find(filter, select) ...
+        return result;
     }
 
     static isJson(str) {

@@ -95,3 +95,7 @@ const p2 = new Point(5,8);
 //Получаем так статические методы и переменные
 Point.displayName;
 Point.distance(p1, p2);
+
+
+// React.createElement('h1', {className: 'greeting'}, 'Привет мир');
+// React.createElement(reactjsx.jsx);
