@@ -13,7 +13,8 @@
     "mongodb": "6.0",
     "mongoose": "^8.1.0",
     "morgan": "^1.10.0",
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "keywords": [],
   "description": "",

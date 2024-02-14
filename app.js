@@ -4,6 +4,7 @@ const path = require('path');
 const MongoDB = require('./server/mongodb');
 const { ObjectId } = require('mongodb');
 const controllSchema = require('./server/schema');
+const { nextTick } = require('process');
 
 //const MongoClient = require('mongodb').MongoClient;
 
@@ -31,6 +32,19 @@ mdb.Init();
 const createPath = (page) => path.resolve(__dirname, 'views', `${page}.html`);
 
 app.use(morgan(':method :url :status :res[content-lenght] - :response-time ms'));
+
+/*
+app.use((req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*'); //Указываем какому приложению мы разрешаем доступ к серверным запросам
+    // SELECT * FROM table.name WHERE ID=1
+    // robots.txt
+    // Disallow: *
+    res.setHeader('Access-Control-Allow-Method', 'GET'); // 'GET, POST'
+    res.setHeader('Access-Control-Allow-Header', 'X-Requestes-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true); //Разрешить все что указано выше и считать валидным
+    nextTick();
+});
+*/
 
 app.set('views', 'views');
 
