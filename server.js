@@ -4,59 +4,44 @@ const path = require('path');
 const MongoDB = require('./server/mongodb');
 const { ObjectId } = require('mongodb');
 const controllSchema = require('./server/schema');
-const { nextTick } = require('process');
 
 //const MongoClient = require('mongodb').MongoClient;
 
 const app = express();
 const mdb = new MongoDB();
 
-const PORT = 8090;
+const PORT = 8000;
 
 mdb.Init();
-
-// let c = mdb.count('brands');
-// console.log(c);
-
-// const client = new MongoClient('mongodb://localhost:27017/');
-
-// client.connect().then(mongoClient => {
-//     console.log('DB start connect');
-//     console.log(mongoClient.options.dbName);
-//     const db = mongoClient.db('group10');
-//     const collection = db.collection('brands');
-//     console.log(collection);
-// });
-
 
 const createPath = (page) => path.resolve(__dirname, 'views', `${page}.html`);
 
 app.use(morgan(':method :url :status :res[content-lenght] - :response-time ms'));
 
-/*
-app.use((req, res) => {
+app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*'); //Указываем какому приложению мы разрешаем доступ к серверным запросам
     // SELECT * FROM table.name WHERE ID=1
     // robots.txt
     // Disallow: *
     res.setHeader('Access-Control-Allow-Method', 'GET'); // 'GET, POST'
-    res.setHeader('Access-Control-Allow-Header', 'X-Requestes-With,content-type');
+    res.setHeader('Access-Control-Allow-Header', 'X-Requested-With,content-type');
     res.setHeader('Access-Control-Allow-Credentials', true); //Разрешить все что указано выше и считать валидным
-    nextTick();
+    next();
 });
-*/
 
-app.set('views', 'views');
+//app.set('views', 'views');
 
-app.use(express.urlencoded({extended : true})); //возвращает корректные url и их методы
+//app.use(express.urlencoded({extended : true})); //возвращает корректные url и их методы
 
-app.use(express.static('public'));
+//app.use(express.static('public'));
 
 //GET request
-app.get('/', (req, res) => {
-    const title = 'Index';
-    res.sendFile(createPath('index'), {title});
+app.get('/', async (req, res) => {
+    console.log('index');
+    let list = await mdb.get('brands');
+    res.end(JSON.stringify(list));
 });
+
 
 app.get('/index.html', (req, res) => {
     res.statusCode = 301;
@@ -98,6 +83,7 @@ app.post('/:section/', async (req,res) => { //request, response
     }
     
 });
+
 
 //Обработка ошибок, всегда вызываем самым последним
 app.use((req, res) => {
