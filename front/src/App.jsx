@@ -1,33 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Header from './components/header/Header';
-import Table from './components/table/Table';
+import FetchRequst from './modules/Fetch';
 
 const serverAddr = 'http://localhost:8000/';
 //const PORT = 3000;
 
 function App() {
-  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState({});
+
+  const serverResponse = useCallback(async () => {
+    setLoading(true);
+    // const response = await fetch(serverAddr);
+    // const srData = await response.json();
+    const dataResult = await FetchRequst.get({menu: 'y'});
+
+    setData(dataResult);
+    setLoading(false);
+  }, []);
 
   useEffect(
     () => {
-      fetch(serverAddr) //pending
-      .then(response => response.json())
-      .then(
-        (response) => { //response
-          //setData(<Table data={response} />);
-        },
-        (error) => { //rejected
-          console.error(error);
-        }
-      )
-    }
+      serverResponse();
+    }, [serverResponse]
   )
 
   return (
     <div className="App">
       <Header />
-
-      { data }
     </div>
   );
 }

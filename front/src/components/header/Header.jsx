@@ -31,11 +31,9 @@ export default function Header() {
             </div>
             
             <menu>
-                <li dataRoute="owners">Владельцы</li>
-                <li dataRoute="brands">Бренды</li>
-                <li dataRoute="models">Модели</li>
-                <li dataRoute="services">Услуги</li>
-                <li dataRoute="cards">Объекты</li>
+                <li>Владельцы</li>
+                <li>Бренды</li>
+                <li>Модели</li>
             </menu>
 
             <div className='timer'>Время: { now.toLocaleTimeString() }</div>

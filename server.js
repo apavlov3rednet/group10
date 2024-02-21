@@ -19,6 +19,7 @@ const createPath = (page) => path.resolve(__dirname, 'views', `${page}.html`);
 app.use(morgan(':method :url :status :res[content-lenght] - :response-time ms'));
 
 app.use((req, res, next) => {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.setHeader('Access-Control-Allow-Origin', '*'); //Указываем какому приложению мы разрешаем доступ к серверным запросам
     // SELECT * FROM table.name WHERE ID=1
     // robots.txt
@@ -29,24 +30,27 @@ app.use((req, res, next) => {
     next();
 });
 
+//Это если у нас клиент-сервер
 //app.set('views', 'views');
-
 //app.use(express.urlencoded({extended : true})); //возвращает корректные url и их методы
-
 //app.use(express.static('public'));
 
 //GET request
 app.get('/', async (req, res) => {
-    console.log('index');
     let list = await mdb.get('brands');
     res.end(JSON.stringify(list));
 });
 
-
-app.get('/index.html', (req, res) => {
-    res.statusCode = 301;
-    res.redirect('/');
+app.get('/?menu=y', async(req, res) => {
+    let list = await mdb.get('menu');
+    res.end(JSON.stringify(list));
 });
+
+
+// app.get('/index.html', (req, res) => {
+//     res.statusCode = 301;
+//     res.redirect('/');
+// });
 
 app.get('/:section/', async (req,res) => {
     const title = req.params.section;
