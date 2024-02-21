@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Logo from '../../images/logo.png';
 import './style.css';
+import Menu from '../menu/Menu';
 
-export default function Header() {
+export default function Header({ ...props }) {
     /**
      * Правила работы с хуками
      * 1. Нельзя писать вне компонента
@@ -10,18 +11,7 @@ export default function Header() {
      * (нельзя вкладывать в условия)
      * и в самом начале компонента
      */
-    const [now, setNow] = useState(new Date());
-
-    useEffect(
-        () => {
-            const interval = setInterval(() => setNow(new Date()), 1000);
-
-            return () => {
-                clearInterval(interval);
-                console.log('clear...');
-            }
-        }, []
-    );
+    //const [now, setNow] = useState(new Date());
 
     return (
         <header>
@@ -30,13 +20,9 @@ export default function Header() {
             <h1>SPA</h1>
             </div>
             
-            <menu>
-                <li>Владельцы</li>
-                <li>Бренды</li>
-                <li>Модели</li>
-            </menu>
+            <Menu />
 
-            <div className='timer'>Время: { now.toLocaleTimeString() }</div>
+            {/* <div className='timer'>Время: { now.toLocaleTimeString() }</div> */}
         </header>
     )
 }

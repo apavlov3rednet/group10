@@ -36,16 +36,20 @@ app.use((req, res, next) => {
 //app.use(express.static('public'));
 
 //GET request
+
 app.get('/', async (req, res) => {
+    console.log('index');
     let list = await mdb.get('brands');
-    res.end(JSON.stringify(list));
+    let menu = await mdb.get('menu');
+    res.end(JSON.stringify({menu: menu, table: list}));
 });
 
-app.get('/?menu=y', async(req, res) => {
-    let list = await mdb.get('menu');
-    res.end(JSON.stringify(list));
-});
 
+app.get('/?menu=y', async (req, res) => {
+    console.log('menu');
+    let menu = await mdb.get('menu');
+    res.end(JSON.stringify(menu));
+});
 
 // app.get('/index.html', (req, res) => {
 //     res.statusCode = 301;

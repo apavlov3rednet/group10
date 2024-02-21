@@ -6,11 +6,13 @@ class FetchRequst {
 
         if(Object.keys(params).length > 0) {
             addr += '?';
+            let arrResp = [];
             for(let i in params) {
-                addr += i + '=' + params[i] + '&';
+                arrResp.push(i + '=' + params[i]);
             }
-        }
 
+            addr += arrResp.join('&');
+        }
         const response = await fetch(addr);
         const data = await response.json();
 
