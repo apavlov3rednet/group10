@@ -1,3 +1,32 @@
+/*
+App
+processing - options
+pages
+modules
+components
+widjets - options
+asset - options
+atom
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //Подключаем нативный модуль
 const http = require('http');
 
@@ -5,6 +34,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
+const { default: App } = require('./front/src/App');
 
 const PORT = 8084;
 

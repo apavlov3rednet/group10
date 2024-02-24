@@ -1,0 +1,17 @@
+.simple-table {
+    margin: 20px auto;
+}
+
+.simple-table thead tr th {
+    padding: 5px 10px;
+    background: #1976d2;
+    color: #fff;
+}
+
+.simple-table tbody tr:nth-child(even) {
+    background-color: #1976d220;
+}
+
+.simple-table tbody tr td {
+    padding: 5px 10px;
+}
