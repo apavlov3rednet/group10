@@ -16,7 +16,7 @@ app.use((req, res, next) => {
     // SELECT * FROM table.name WHERE ID=1
     // robots.txt
     // Disallow: *
-    res.setHeader('Access-Control-Allow-Method', 'GET'); // 'GET, POST'
+    res.setHeader('Access-Control-Allow-Method', 'GET, POST, DELETE'); // 'GET, POST'
     res.setHeader('Access-Control-Allow-Header', 'X-Requested-With,content-type');
     res.setHeader('Access-Control-Allow-Credentials', true); //Разрешить все что указано выше и считать валидным
     next();
@@ -29,7 +29,7 @@ app.use((req, res, next) => {
 
 //GET request
 
-app.get('/api/getList:CollectionName/', async (req, res) => { // http://localhost:8000/api/getListMenu/
+app.get('/api/:CollectionName/', async (req, res) => { // http://localhost:8000/api/getListMenu/
     let mdb = new Fetch.MongoDB(req.params.CollectionName.toLowerCase()),
         result = {},
         filter = req.query.filter,
@@ -41,12 +41,19 @@ app.get('/api/getList:CollectionName/', async (req, res) => { // http://localhos
     res.end(JSON.stringify(result));
 });
 
-app.post('/api/setValue:CollectionName/', async (req, res) => {
+app.post('/api/:CollectionName/', async (req, res) => {
     const collectionName = req.params.CollectionName.toLowerCase();
     const mdb = new Fetch.MongoDB(collectionName);
     const Controll = new Fetch.Controll(collectionName);
     const result = await mdb.set(Controll.preparePost(req.query));
     res.end();
+});
+
+app.get('/api/:CollectionName/:id/', async (req, res) => {
+    const collectionName = req.params.CollectionName.toLowerCase();
+    const mdb = new Fetch.MongoDB(collectionName);
+    mdb.remove(req.params.id);
+    res.end('deleted');
 });
 
 // app.get('/index.html', (req, res) => {

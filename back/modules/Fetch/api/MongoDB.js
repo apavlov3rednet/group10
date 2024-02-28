@@ -1,4 +1,6 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
+import Schema from '../schema/index.js';
+import Controll from './Controll.js';
 
 export default class MongoDB 
 {
@@ -14,6 +16,7 @@ export default class MongoDB
         this.client = new MongoClient(url);
         this.db = this.client.db(MongoDB.#DBNAME);
         this.collection = this.db.collection(collectionName);
+        this.schema = Schema[collectionName];
         console.info('DB connect success');
     }
 
@@ -70,16 +73,9 @@ export default class MongoDB
      * @param {*} collectionName 
      * @param {*} _id 
      */
-    async remove(_id = ObjectId) {
-        if(_id instanceof ObjectId) {
-
-            if(confirm('Удалить?')) {            
-                await this.collection.dropOne({_id: _id});
-                return true;
-            }
-        }
-
-        return false;
+    async remove(_id) {         
+        await this.collection.deleteOne({_id: new ObjectId(_id)});
+        return true;
     }
 
     /**
@@ -123,16 +119,14 @@ export default class MongoDB
         });
         */
 
-        console.log(filter, {query, ...options});
+        let unPrepResult = await this.collection.find(filter, { query, ...options }).toArray();
 
-        let result = await this.collection.find(filter, { query, ...options }).toArray();
+        let data = Controll.prepareData(unPrepResult, this.schema);
 
-        // while(result.hasNext()) {
-        //     arResult.push(result.next());
-        // }
-
-        //.limit(limit).skip(pageCount); // ...find(filter, select) ...
-        return result;
+        return {
+            schema: this.schema,
+            data: data
+        };
     }
 
     static isJson(str) {

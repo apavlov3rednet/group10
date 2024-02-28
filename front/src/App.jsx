@@ -30,7 +30,7 @@ function App() {
     <div className="App">
       <Header />
       
-      <Table name='Brands'/>
+      <Table nameTable='Brands'/>
     </div>
   );
 }
