@@ -1,5 +1,7 @@
-import Header from './components/header/Header';
-import Table from './components/table/Table';
+import Form from './components/form/Form.jsx';
+import Header from './components/header/Header.jsx';
+import Table from './components/table/Table.jsx';
+import './css/style.css';
 
 //const PORT = 3000;
 
@@ -30,7 +32,11 @@ function App() {
     <div className="App">
       <Header />
       
-      <Table nameTable='Brands'/>
+      <div className="container">
+        <Form nameForm='Brands' />
+        <Table nameTable='Brands'/>
+      </div>
+      
     </div>
   );
 }

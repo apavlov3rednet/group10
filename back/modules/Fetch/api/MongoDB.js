@@ -56,16 +56,10 @@ export default class MongoDB
     }
 
     async set(collectionName, props = {}) {
-        if(collectionName == "" || Object.keys(props).length === 0) {
-            this.mongoClient.close();
-            return false;
-        }
 
-        let collection = this.db.collection(collectionName);
+        //let result = await this.collection.insertOne(props); //db.collectionName
 
-        let result = await collection.insertOne(props); //db.collectionName
-
-        return result;
+        return true;
     }
 
     /**

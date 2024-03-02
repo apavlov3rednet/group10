@@ -1,6 +1,7 @@
-import express from 'express';
+import express, { urlencoded } from 'express';
 import morgan from 'morgan';
 import Fetch from './back/modules/Fetch/index.js';
+import schema from './back/modules/Fetch/schema/index.js';
 
 //const MongoClient = require('mongodb').MongoClient;
 
@@ -24,7 +25,6 @@ app.use((req, res, next) => {
 
 //Это если у нас клиент-сервер
 //app.set('views', 'views');
-//app.use(express.urlencoded({extended : true})); //возвращает корректные url и их методы
 //app.use(express.static('public'));
 
 //GET request
@@ -41,20 +41,32 @@ app.get('/api/:CollectionName/', async (req, res) => { // http://localhost:8000/
     res.end(JSON.stringify(result));
 });
 
-app.post('/api/:CollectionName/', async (req, res) => {
-    const collectionName = req.params.CollectionName.toLowerCase();
-    const mdb = new Fetch.MongoDB(collectionName);
-    const Controll = new Fetch.Controll(collectionName);
-    const result = await mdb.set(Controll.preparePost(req.query));
-    res.end();
-});
-
 app.get('/api/:CollectionName/:id/', async (req, res) => {
     const collectionName = req.params.CollectionName.toLowerCase();
     const mdb = new Fetch.MongoDB(collectionName);
     mdb.remove(req.params.id);
     res.end('deleted');
 });
+
+app.get('/api/schema/get/:Schema/', async (req, res) => {
+    let obSchema = await schema[req.params.Schema.toLowerCase()];
+    res.end(JSON.stringify(obSchema));
+});
+
+const urlencodedParser = express.urlencoded({extended: false});
+
+app.post('/api/:CollectionName/', urlencodedParser, async (req, res) => {
+    const collectionName = req.params.CollectionName.toLowerCase();
+    const mdb = new Fetch.MongoDB(collectionName);
+    const Controll = new Fetch.Controll(collectionName);
+    //const result = await mdb.set(Controll.preparePost(req.query));
+
+    console.log(req); //todo: разберись что не так
+
+    res.end(JSON.stringify({status: 'ok'}));
+});
+
+
 
 // app.get('/index.html', (req, res) => {
 //     res.statusCode = 301;

@@ -54,7 +54,7 @@ export default function Table({nameTable}) {
         let header = [];
         for(let i in schema) {
             if(i === '_id') {
-                header.push('ID')
+                header.push({loc: 'ID'})
             }
             else {
                 header.push(schema[i])
