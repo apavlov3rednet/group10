@@ -26,6 +26,7 @@ app.use((req, res, next) => {
 //Это если у нас клиент-сервер
 //app.set('views', 'views');
 //app.use(express.static('public'));
+app.use(express.urlencoded({ extended : true}));
 
 //GET request
 
@@ -42,6 +43,8 @@ app.get('/api/:CollectionName/', async (req, res) => { // http://localhost:8000/
 });
 
 app.get('/api/:CollectionName/:id/', async (req, res) => {
+    console.log(req.params.CollectionName, req.params.id);
+
     const collectionName = req.params.CollectionName.toLowerCase();
     const mdb = new Fetch.MongoDB(collectionName);
     mdb.remove(req.params.id);
@@ -53,17 +56,18 @@ app.get('/api/schema/get/:Schema/', async (req, res) => {
     res.end(JSON.stringify(obSchema));
 });
 
-const urlencodedParser = express.urlencoded({extended: false});
-
-app.post('/api/:CollectionName/', urlencodedParser, async (req, res) => {
+app.post('/api/:CollectionName/', async (req, res) => {
     const collectionName = req.params.CollectionName.toLowerCase();
     const mdb = new Fetch.MongoDB(collectionName);
-    const Controll = new Fetch.Controll(collectionName);
-    //const result = await mdb.set(Controll.preparePost(req.query));
 
-    console.log(req); //todo: разберись что не так
+    console.log(req.body);
 
-    res.end(JSON.stringify({status: 'ok'}));
+    const result = await mdb.set(req.body);
+
+    if(result.acknowledged) {
+        let newUrl = "http://localhost:3000/?id=" + String(result.insertedId);
+        res.redirect(newUrl);
+    }
 });
 
 

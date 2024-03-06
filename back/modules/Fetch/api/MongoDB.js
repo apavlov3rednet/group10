@@ -17,6 +17,7 @@ export default class MongoDB
         this.db = this.client.db(MongoDB.#DBNAME);
         this.collection = this.db.collection(collectionName);
         this.schema = Schema[collectionName];
+        this.controll = new Controll(collectionName);
         console.info('DB connect success');
     }
 
@@ -55,11 +56,20 @@ export default class MongoDB
         return false;
     }
 
-    async set(collectionName, props = {}) {
+    async set(props = {}) {
+        let id = 0;
+        let controllData = this.controll.preparePost(props);
 
-        //let result = await this.collection.insertOne(props); //db.collectionName
+        if(controllData._id) {
+            id = controllData._id;
+            //UPDATE
+        }
+        else {
+            //ADD
+            id = await this.collection.insertOne(controllData);
+        }
 
-        return true;
+        return id;
     }
 
     /**
