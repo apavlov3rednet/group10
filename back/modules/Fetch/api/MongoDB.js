@@ -61,8 +61,12 @@ export default class MongoDB
         let controllData = this.controll.preparePost(props);
 
         if(controllData._id) {
-            id = controllData._id;
             //UPDATE
+            let result = await this.collection.updateOne(
+                { _id : controllData._id },
+                { $set : controllData }
+            );
+            id = result;
         }
         else {
             //ADD

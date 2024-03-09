@@ -1,43 +1,30 @@
-import Form from './components/form/Form.jsx';
 import Header from './components/header/Header.jsx';
-import Table from './components/table/Table.jsx';
+import Container from './components/container/Container.jsx';
 import './css/style.css';
+import { BrowserRouter } from 'react-router-dom';
+import Route from './modules/Routes.js';
+import { useState, useEffect, useCallback } from 'react';
 
 //const PORT = 3000;
 
 function App() {
-  // const [loading, setLoading] = useState(false);
-  // const [data, setData] = useState({
-  //   menu: [],
-  //   table: []
-  // });
+  let [currentPath, setCurrentPath] = useState('/');
 
-  // const serverResponse = useCallback(async () => {
-  //   setLoading(true);
-  //   // const response = await fetch(serverAddr);
-  //   // const srData = await response.json();
-  //   const dataResult = await FetchRequst.get();
+  const setPath = useCallback(async () => {
+    let r = new Route();
+    setCurrentPath(r.getUrl())
+  }, [])
 
-  //   setData(dataResult);
-  //   setLoading(false);
-  // }, []);
-
-  // useEffect(
-  //   (prev) => {
-  //     serverResponse(prev);
-  //   }, [serverResponse]
-  // )
+  useEffect(
+    () => {setPath()}, [setPath] 
+  );
 
   return (
-    <div className="App">
-      <Header />
-      
-      <div className="container">
-        <Form nameForm='Brands' />
-        <Table nameTable='Brands'/>
-      </div>
-      
-    </div>
+        <div className="App">
+          <Header curPath={currentPath} />
+          
+          <Container curPath={currentPath}></Container>      
+        </div>
   );
 }
 

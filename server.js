@@ -2,6 +2,8 @@ import express, { urlencoded } from 'express';
 import morgan from 'morgan';
 import Fetch from './back/modules/Fetch/index.js';
 import schema from './back/modules/Fetch/schema/index.js';
+import { ObjectId } from 'mongodb';
+import config from './back/params/config.js';
 
 //const MongoClient = require('mongodb').MongoClient;
 
@@ -30,13 +32,19 @@ app.use(express.urlencoded({ extended : true}));
 
 //GET request
 
-app.get('/api/:CollectionName/', async (req, res) => { // http://localhost:8000/api/getListMenu/
+app.get('/api/:CollectionName/', async (req, res) => { // http://localhost:8000/api/getListMenu/?id=lskdlskdf&dfsdfsdf=kdkd
     let mdb = new Fetch.MongoDB(req.params.CollectionName.toLowerCase()),
         result = {},
-        filter = req.query.filter,
+        filter = {},
         select = [],
-        limit = req.query.limit,
-        skip = req.query.skip;
+        limit = false,
+        skip = false;
+
+    if(req.query) {
+        if(req.query.id) {
+            filter._id = new ObjectId(req.query.id);
+        }
+    }
 
     result = await mdb.get(filter, select, limit, skip);
     res.end(JSON.stringify(result));
@@ -65,7 +73,7 @@ app.post('/api/:CollectionName/', async (req, res) => {
     const result = await mdb.set(req.body);
 
     if(result.acknowledged) {
-        let newUrl = "http://localhost:3000/?id=" + String(result.insertedId);
+        let newUrl = config.client + "?id=" + String(result.insertedId);
         res.redirect(newUrl);
     }
 });
