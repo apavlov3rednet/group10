@@ -22,7 +22,7 @@ export default function Table({nameTable, onChange}) {
 
         setTable(data);
         setLoading(false);
-    }, [nameTable])
+    }, [nameTable, onChange])
 
     useEffect(
         () => {

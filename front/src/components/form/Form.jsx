@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import config from "../../params/config.js";
 import './style.css';
 
-export default function Form({nameForm, arValue = {} }) {
+export default function Form({nameForm, arValue}) {
     const [schema, setSchema] = useState(null);
     const [formValue, setFormValue] = useState(arValue);
-    const urlRequest = config.api + nameForm + '/';
+    const [url, setUrl] = useState(config.api + nameForm + '/');
 
     useEffect(
         () => {
@@ -14,7 +14,7 @@ export default function Form({nameForm, arValue = {} }) {
                 const answer = await response.json();
                 setSchema(answer);
             }
-
+            setUrl(config.api + nameForm + '/');
             fetchSchema();
             setFormValue(arValue);
         }, [nameForm, arValue]
@@ -74,7 +74,7 @@ export default function Form({nameForm, arValue = {} }) {
     }
 
     return (
-        <form method='POST' action={urlRequest}>
+        <form method='POST' action={url}>
             { renderForm(schema, formValue) }
 
             <button>Сохранить</button>

@@ -131,10 +131,48 @@ export default class MongoDB
 
         let data = Controll.prepareData(unPrepResult, this.schema);
 
+        data = await this.findSimilar(data);
+
+        console.log('newData', data);
         return {
             schema: this.schema,
-            data: data
+            data: data,
+            similar: []
         };
+    }
+
+    async getSimilar(ob) {
+        if(ob.collectionName) {
+            let mdb = new MongoDB(ob.collectionName);
+            let filter = {_id: ob._id};
+            let result = await mdb.collection.find(filter).toArray();
+            console.log(result);
+            if(result.length === 0) {
+                return {
+                    TITLE: "Элемент удален"
+                };
+            }
+            else {
+                return result;
+            }
+            
+        } 
+    }
+
+    async findSimilar(data = []) {
+        let newData = data;
+
+        data.forEach(async (item, i) => {
+            for(let index in item) {
+                if(item[index].collectionName) {
+                    let el = await this.getSimilar(item[index]);
+                    console.log(index, newData[i], el);
+                    newData[i][index]['TITLE'] = el.TITLE;
+                }
+            }
+        });
+
+        return await newData;
     }
 
     static isJson(str) {
