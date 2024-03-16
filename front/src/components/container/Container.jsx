@@ -13,7 +13,7 @@ export default function Container({ curPath })
     }
 
     const setCollection = useCallback(async () => {
-        if(curPath !== 'index')
+        if(curPath !== 'index' && curPath !== '/')
             setCollectionName(curPath);
     });
 

@@ -113,50 +113,43 @@ export default class MongoDB
         if(pageCount > 0)
             options.skip = pageCount;
 
-        /**
-         * todo: переписать
-        this.db.runCommand({
-            find: collectionName,
-            filter: {},
-            sort: {},
-            limit: int,
-            skip: int,
-            returnKey: Boolean,
-            awaitData: Boolean,
-            let: <document>
-        });
-        */
-
         let unPrepResult = await this.collection.find(filter, { query, ...options }).toArray();
 
         let data = Controll.prepareData(unPrepResult, this.schema);
+        let simId = {};
+        let sim = {};
 
-        data = await this.findSimilar(data);
+        data.forEach(item => {
+            for(let i in item) {
+                let keyElement =item[i];
 
-        console.log('newData', data);
+                if(keyElement.ref) {
+                    if(!simId[keyElement.collectionName])
+                        simId[keyElement.collectionName] = [];
+
+                    simId[keyElement.collectionName].push(new ObjectId(keyElement._id));
+                }
+            }
+        });
+
+        if(Object.keys(simId).length > 0) {
+            for(let collection in simId) {
+                let mdb = new MongoDB(collection);
+                let ids = simId[collection];
+
+                sim[collection] = await mdb.collection.find({
+                    _id: { $in: ids }
+                }).toArray();
+            }
+        }
+
+        console.log(sim);
+
         return {
             schema: this.schema,
             data: data,
-            similar: []
+            sim: sim
         };
-    }
-
-    async getSimilar(ob) {
-        if(ob.collectionName) {
-            let mdb = new MongoDB(ob.collectionName);
-            let filter = {_id: ob._id};
-            let result = await mdb.collection.find(filter).toArray();
-            console.log(result);
-            if(result.length === 0) {
-                return {
-                    TITLE: "Элемент удален"
-                };
-            }
-            else {
-                return result;
-            }
-            
-        } 
     }
 
     async findSimilar(data = []) {

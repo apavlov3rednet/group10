@@ -6,7 +6,8 @@ import './style.css';
 export default function Table({nameTable, onChange}) {
     const [table, setTable] = useState({
         header: [],
-        body: []
+        body: [],
+        sim: {}
     });
     const [loading, setLoading] = useState(false);
 
@@ -17,7 +18,8 @@ export default function Table({nameTable, onChange}) {
 
         const data = {
             header: answer.schema,
-            body: answer.data
+            body: answer.data,
+            sim: answer.sim
         }
 
         setTable(data);
@@ -83,6 +85,20 @@ export default function Table({nameTable, onChange}) {
         )
     }
 
+    function getContent(col, index, sim) {
+        let value = col;
+
+        if(col.ref) {
+            value = sim[col.collectionName].filter(item => item._id === col._id)[0].TITLE;
+        }
+
+        return (
+            <td key={index}>
+                {value && value}
+            </td>
+        )
+    }
+
     return (
         <table className='simple-table'>
             <thead>
@@ -94,7 +110,7 @@ export default function Table({nameTable, onChange}) {
                     !loading && table.body.map((row) => (
                         <tr key={row._id}>
                             {Object.values(row).map((col, index )=> (
-                                <td key={index}>{col}</td>
+                                getContent(col, index, table.sim)
                             ))}
                             <td>
                                 <button className='edit' onClick={edit} value={row._id}></button>

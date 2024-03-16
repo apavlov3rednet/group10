@@ -73,7 +73,7 @@ app.post('/api/:CollectionName/', async (req, res) => {
     const result = await mdb.set(req.body);
 
     if(result.acknowledged) {
-        let newUrl = config.client + "?id=" + String(result.insertedId);
+        let newUrl = config.client + req.body.collection + "?id=" + String(result.insertedId);
         res.redirect(newUrl);
     }
 });

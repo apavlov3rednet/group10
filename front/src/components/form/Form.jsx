@@ -12,6 +12,16 @@ export default function Form({nameForm, arValue}) {
             async function fetchSchema() {
                 const response = await fetch(config.api + 'schema/get/' + nameForm + '/');
                 const answer = await response.json();
+
+                for(let key in answer) {
+                    let element = answer[key];
+
+                    if(element.type === 'DBRef') {
+                        let mdb = await fetch(config.api + element.collection + '/');
+                        let ar = await mdb.json();
+                        answer[key].arList = ar.data;
+                    }
+                }
                 setSchema(answer);
             }
             setUrl(config.api + nameForm + '/');
@@ -19,6 +29,22 @@ export default function Form({nameForm, arValue}) {
             setFormValue(arValue);
         }, [nameForm, arValue]
     );
+
+    function renderSelect(ar) {
+        let list = ar.arList;
+        let value = ar.value._id;
+
+        return (
+            <>
+                <option key='0' value='0' disabled>Выберите бренд</option>
+                {
+                    list.map(item => (
+                        <option selected={value === item._id} key={item._id} defaultValue={item._id}>{item.TITLE}</option>
+                    ))
+                }
+            </>
+        )
+    }
 
     function renderForm(data = {}, ar = {}) {
         let formElements = [];
@@ -46,6 +72,11 @@ export default function Form({nameForm, arValue}) {
                     newRow.fieldType = 'tel';
                 break;
 
+                case "DBRef":
+                    newRow.fieldType = 'select';
+                    newRow.list = renderSelect(newRow);
+                break;
+
                 case "Hidden":
                 default: 
                     newRow.fieldType = 'hidden';
@@ -61,11 +92,13 @@ export default function Form({nameForm, arValue}) {
                     formElements.map((item, index) => (
                         <label key={index}> 
                             <span>{item.loc} {item.require && '*'}</span>
-                            <input type={item.fieldType} 
+                            {item.fieldType !== 'select' && <input type={item.fieldType} 
                                 required={item.require && true}
                                 step={(item.fieldType === 'number') ? '1000' : null} 
                                 defaultValue={item.value && item.value}
-                                name={item.code} />
+                                name={item.code} />}
+
+                            {item.fieldType === 'select' && <select name={item.code}>{item.list}</select>}
                         </label>
                     ))
                 }
@@ -75,6 +108,7 @@ export default function Form({nameForm, arValue}) {
 
     return (
         <form method='POST' action={url}>
+            <input type='hidden' name='collection' value={nameForm}/>
             { renderForm(schema, formValue) }
 
             <button>Сохранить</button>

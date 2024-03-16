@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongodb';
+import { DBRef, ObjectId } from 'mongodb';
 import schema from "../schema/index.js";
 
 export default class Controll {
@@ -37,6 +37,11 @@ export default class Controll {
                         case "String":
                             data[i] = String(checkValue);
                         break;
+
+                        case 'DBRef':
+                            data[i] = new DBRef(checkSchema.collection, new ObjectId(checkValue));
+                            // { $ref: 'collection', $id: new ObjectId()}
+                        break;
                     }
                 }
                 else { //Подставляем значения по умолчанию, если оно пришло пустым или не существует
@@ -62,12 +67,16 @@ export default class Controll {
                         let collection = dbref.collection;
                         let oid = dbref.oid;
 
-                        newRow[fieldName] = {
-                            collectionName: collection,
-                            _id: oid 
+                        if(collection) {
+                            newRow[fieldName] = {
+                                ref: true,
+                                collectionName: collection,
+                                _id: String(oid) //{a: 1} === {a: 1}
+                            }
                         }
                     }
                     else {
+                        console.log(newData);
                         newRow[fieldName] = newData;
                     }
                     
