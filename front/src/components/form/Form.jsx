@@ -4,8 +4,10 @@ import './style.css';
 
 export default function Form({nameForm, arValue}) {
     const [schema, setSchema] = useState(null);
-    const [formValue, setFormValue] = useState(arValue);
+    const [formValue, setFormValue] = useState({});
     const [url, setUrl] = useState(config.api + nameForm + '/');
+    const [edit, setEdit] = useState(false); 
+    const [disabled, setDisabled] = useState(true);
 
     useEffect(
         () => {
@@ -26,7 +28,12 @@ export default function Form({nameForm, arValue}) {
             }
             setUrl(config.api + nameForm + '/');
             fetchSchema();
-            setFormValue(arValue);
+            if(Object.keys(arValue).length > 0) {
+                setFormValue(arValue);
+                setEdit(true);
+                setDisabled(false);
+            }
+            
         }, [nameForm, arValue]
     );
 
@@ -36,10 +43,10 @@ export default function Form({nameForm, arValue}) {
 
         return (
             <>
-                <option key='0' value='0' disabled>Выберите бренд</option>
+                <option key='0' value='0'>Выберите...</option>
                 {
                     list.map(item => (
-                        <option selected={value === item._id} key={item._id} defaultValue={item._id}>{item.TITLE}</option>
+                        <option selected={value === item._id} key={item._id} value={item._id}>{item.TITLE}</option>
                     ))
                 }
             </>
@@ -106,12 +113,39 @@ export default function Form({nameForm, arValue}) {
         )
     }
 
+    function clearForm(event) {
+        event.preventDefault();
+        setFormValue({});
+        renderForm(schema, {});
+        setEdit(false);
+        setDisabled(true);
+    }
+
+    function checkRequired(event) {
+        let formElement = event.target.closest('form').querySelectorAll('input, select, textarea');
+        let error = 0;
+
+        formElement.forEach(item => {
+            if(item.required === true && (item.value === '0' || item.value === '')) {
+                setDisabled(true);
+                error++;
+            }
+        });
+
+        if(error == 0) 
+            setDisabled(false);
+    }
+
     return (
-        <form method='POST' action={url}>
+        <form method='POST' action={url} onChange={checkRequired}>
             <input type='hidden' name='collection' value={nameForm}/>
             { renderForm(schema, formValue) }
 
-            <button>Сохранить</button>
+            <button disabled={disabled && disabled}>
+                {!edit && 'Сохранить'}
+                {edit && 'Изменить'}
+            </button>
+            <button onClick={clearForm}>Сбросить</button>
         </form>
     )
 }

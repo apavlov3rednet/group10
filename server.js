@@ -51,8 +51,6 @@ app.get('/api/:CollectionName/', async (req, res) => { // http://localhost:8000/
 });
 
 app.get('/api/:CollectionName/:id/', async (req, res) => {
-    console.log(req.params.CollectionName, req.params.id);
-
     const collectionName = req.params.CollectionName.toLowerCase();
     const mdb = new Fetch.MongoDB(collectionName);
     mdb.remove(req.params.id);
@@ -67,13 +65,10 @@ app.get('/api/schema/get/:Schema/', async (req, res) => {
 app.post('/api/:CollectionName/', async (req, res) => {
     const collectionName = req.params.CollectionName.toLowerCase();
     const mdb = new Fetch.MongoDB(collectionName);
-
-    console.log(req.body);
-
     const result = await mdb.set(req.body);
 
     if(result.acknowledged) {
-        let newUrl = config.client + req.body.collection + "?id=" + String(result.insertedId);
+        let newUrl = config.client + collectionName + "?id=" + String(result.insertedId);
         res.redirect(newUrl);
     }
 });

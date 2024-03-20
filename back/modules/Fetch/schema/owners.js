@@ -16,14 +16,13 @@ const owners = {
         sort: false,
         editable: true,
     },
-    MODEL: {
-        type: 'DBRef',
+    EMAIL: {
+        type: 'Email',
         require: false,
         default: 'None',
-        loc: "Модель",
+        loc: "E-mail",
         sort: true,
         editable: true,
-        collection: 'models'
     },
 }
 

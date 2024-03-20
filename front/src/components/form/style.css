@@ -53,3 +53,8 @@ form button {
 form button:hover {
     background: #1e88e5;
 }
+
+form button:disabled {
+    background:#999;
+    cursor:not-allowed;
+}

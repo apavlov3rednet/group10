@@ -35,10 +35,17 @@ export default class Controll {
                         break;
 
                         case "String":
+                            //case 'Phone':
+                                case 'Email':
                             data[i] = String(checkValue);
                         break;
 
+                        case 'Phone':
+                            data[i] = `<a href="tel:${checkValue}">${checkValue}</a>`;
+                        break;
+
                         case 'DBRef':
+                            //console.log(checkSchema.collection, checkValue);
                             data[i] = new DBRef(checkSchema.collection, new ObjectId(checkValue));
                             // { $ref: 'collection', $id: new ObjectId()}
                         break;
