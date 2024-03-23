@@ -85,11 +85,35 @@ export default function Table({nameTable, onChange}) {
         )
     }
 
-    function getContent(col, index, sim) {
+    function getContent(col, index, sim, schema) {
         let value = col;
+        let getIndex = 0;
+        let curSchema = 0;
+
+        for(let i in schema) {
+            if(getIndex === index) {
+                curSchema = schema[i];
+            }
+            getIndex++;
+        }
 
         if(col.ref) {
             value = sim[col.collectionName].filter(item => item._id === col._id)[0].TITLE;
+        }
+
+        if(curSchema.type === 'Phone') {
+            let callTo = 'tel:' + col;
+            value = <a href={callTo}>{col}</a>
+        }
+
+        if(curSchema.type === 'Email') {
+            let mailTo = 'mailto:' + col;
+            value = <a href={mailTo}>{col}</a>
+        }
+
+        if(curSchema.type === 'Date') {
+            let date = new Date(col);
+            value = new Intl.DateTimeFormat('ru').format(date);
         }
 
         return (
@@ -110,7 +134,7 @@ export default function Table({nameTable, onChange}) {
                     !loading && table.body.map((row) => (
                         <tr key={row._id}>
                             {Object.values(row).map((col, index )=> (
-                                getContent(col, index, table.sim)
+                                getContent(col, index, table.sim, table.header)
                             ))}
                             <td>
                                 <button className='edit' onClick={edit} value={row._id}></button>

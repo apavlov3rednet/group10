@@ -1,6 +1,6 @@
 const models = {
     _id: {},
-    GOV_NUM: {
+    TITLE: {
         type: 'String',
         require: true,
         default: 'None',

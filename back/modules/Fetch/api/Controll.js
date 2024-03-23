@@ -17,7 +17,7 @@ export default class Controll {
     preparePost(query) {
         let data = {};
 
-        if(query._id.length > 0) {
+        if(query._id && query._id.length > 0) {
             data._id = new ObjectId(query._id);
         }
 
@@ -35,13 +35,14 @@ export default class Controll {
                         break;
 
                         case "String":
-                            //case 'Phone':
+                            case 'Phone':
                                 case 'Email':
                             data[i] = String(checkValue);
                         break;
 
-                        case 'Phone':
-                            data[i] = `<a href="tel:${checkValue}">${checkValue}</a>`;
+                        case 'Date':
+                            let d = checkValue.split('.');
+                            data[i] = new Date(d[2], d[1], d[0]);
                         break;
 
                         case 'DBRef':
@@ -83,7 +84,6 @@ export default class Controll {
                         }
                     }
                     else {
-                        console.log(newData);
                         newRow[fieldName] = newData;
                     }
                     

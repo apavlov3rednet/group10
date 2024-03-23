@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+import InputMask from 'react-input-mask';
+import DatePicker from 'react-datepicker';
 import config from "../../params/config.js";
 import './style.css';
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function Form({nameForm, arValue}) {
     const [schema, setSchema] = useState(null);
@@ -8,6 +11,7 @@ export default function Form({nameForm, arValue}) {
     const [url, setUrl] = useState(config.api + nameForm + '/');
     const [edit, setEdit] = useState(false); 
     const [disabled, setDisabled] = useState(true);
+    const [startDate, setStartDate] = useState(new Date());
 
     useEffect(
         () => {
@@ -65,28 +69,39 @@ export default function Form({nameForm, arValue}) {
             switch(newRow.type) {
                 case "String":
                     newRow.fieldType = 'text';
+                    newRow.field = 'field';
                 break;
 
                 case "Number":
                     newRow.fieldType = 'number';
+                    newRow.field = 'field';
                 break;
 
                 case "Email":
                     newRow.fieldType = 'email';
+                    newRow.field = 'field';
+                break;
+
+                case 'Date':
+                    newRow.fieldType = 'date';
+                    newRow.field = 'date';
                 break;
 
                 case "Phone":
                     newRow.fieldType = 'tel';
+                    newRow.field = 'tel';
                 break;
 
                 case "DBRef":
                     newRow.fieldType = 'select';
+                    newRow.field = 'select';
                     newRow.list = renderSelect(newRow);
                 break;
 
                 case "Hidden":
                 default: 
                     newRow.fieldType = 'hidden';
+                    newRow.field = 'hidden';
                 break;
             }
 
@@ -97,16 +112,44 @@ export default function Form({nameForm, arValue}) {
             <>
                 {
                     formElements.map((item, index) => (
+                        <>
+                        { item.field === 'hidden' && <input type='hidden' name={item.code} defaultValue={item.value && item.value} />}  
+
+
                         <label key={index}> 
                             <span>{item.loc} {item.require && '*'}</span>
-                            {item.fieldType !== 'select' && <input type={item.fieldType} 
-                                required={item.require && true}
-                                step={(item.fieldType === 'number') ? '1000' : null} 
-                                defaultValue={item.value && item.value}
-                                name={item.code} />}
+                            {
+                                item.field === 'field' && <input type={item.fieldType} 
+                                    required={item.require && true}
+                                    step={(item.fieldType === 'number') ? item.step : null} 
+                                    defaultValue={item.value && item.value}
+                                    name={item.code} />
+                            }
 
-                            {item.fieldType === 'select' && <select name={item.code}>{item.list}</select>}
+                            {
+                                item.field === 'select' && <select name={item.code}>{item.list}</select>
+                            }
+
+                            {
+                                item.field === 'tel' && <InputMask
+                                required={item.require && true}
+                                defaultValue={item.value && item.value}
+                                name={item.code}
+                                    mask="+7(999)-999-99-99" maskChar="_" />
+                            }
+
+                            {
+                                item.field === 'date' && <DatePicker
+                                    selected={startDate}
+                                    dateFormat="dd.MM.yyyy"
+                                    name={item.code}
+                                    required={item.require && true}
+                                    defaultValue={item.value && item.value}
+                                    onChange={(date) => setStartDate(date)}
+                                />
+                            }
                         </label>
+                        </>
                     ))
                 }
             </>
