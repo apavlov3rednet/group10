@@ -42,7 +42,7 @@ export default class Controll {
 
                         case 'Date':
                             let d = checkValue.split('.');
-                            data[i] = new Date(d[2], d[1], d[0]);
+                            data[i] = new Date(d[2], d[1]-1, d[0]);
                         break;
 
                         case 'DBRef':

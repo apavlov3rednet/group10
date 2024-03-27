@@ -4,6 +4,9 @@ import DatePicker from 'react-datepicker';
 import config from "../../params/config.js";
 import './style.css';
 import "react-datepicker/dist/react-datepicker.css";
+import { registerLocale } from  "react-datepicker";
+import { ru } from 'date-fns/locale/ru';
+registerLocale('ru-RU', ru)
 
 export default function Form({nameForm, arValue}) {
     const [schema, setSchema] = useState(null);
@@ -123,6 +126,8 @@ export default function Form({nameForm, arValue}) {
                                     required={item.require && true}
                                     step={(item.fieldType === 'number') ? item.step : null} 
                                     defaultValue={item.value && item.value}
+                                    readOnly={item.readOnly}
+                                    onChange={item.sim && callMethod}
                                     name={item.code} />
                             }
 
@@ -143,6 +148,7 @@ export default function Form({nameForm, arValue}) {
                                     selected={startDate}
                                     dateFormat="dd.MM.yyyy"
                                     name={item.code}
+                                    locale='ru-RU'
                                     required={item.require && true}
                                     defaultValue={item.value && item.value}
                                     onChange={(date) => setStartDate(date)}
@@ -154,6 +160,32 @@ export default function Form({nameForm, arValue}) {
                 }
             </>
         )
+    }
+
+    function callMethod(event) {
+        let form = event.target.closest('form'); //Форма
+        let name = event.target.name; //Имя поля провокатора является ключем схемы
+        let curSchemaTotal = schema[name].sim; //Имя поля с итогом
+
+        if(curSchemaTotal) {
+            let obTotal = form.querySelector('input[name='+curSchemaTotal+']'); //Поле с итогом
+            let value = 0;
+            let method = schema[curSchemaTotal].method; //Метод поля с итогом
+            let arSims = schema[curSchemaTotal].fields; //Ключи связных полей
+            let arFields = [];
+
+            arSims.forEach(item => {
+                arFields.push(form.querySelector('input[name='+item+']'));
+            });
+
+            switch(method) {
+                case "MULTIPLY":
+                    value = arFields[0].value * arFields[1].value;
+                break;
+            }
+
+            obTotal.value = value;
+        }
     }
 
     function clearForm(event) {

@@ -10,14 +10,18 @@ export default class MongoDB
     static #LOGIN;
     static #PSSWD;
 
-    constructor(collectionName) {
+    constructor(collectionName = '') {
         console.info('start DB connect');
         const url = [MongoDB.#LOCATION, MongoDB.#PORT].join(':') + '/';
         this.client = new MongoClient(url);
         this.db = this.client.db(MongoDB.#DBNAME);
-        this.collection = this.db.collection(collectionName);
-        this.schema = Schema[collectionName];
-        this.controll = new Controll(collectionName);
+
+        if(collectionName != '') {
+            this.collection = this.db.collection(collectionName);
+            this.schema = Schema[collectionName];
+            this.controll = new Controll(collectionName);
+        }
+        
         console.info('DB connect success');
     }
 
@@ -56,7 +60,43 @@ export default class MongoDB
         return false;
     }
 
+    async getCollectionInfo() {
+        let name = this.collection.namespace;
+       let indexes = (await this.collection.indexes()).length;
+       let countDocuments = await this.collection.countDocuments();
+       let stats = await this.collection.stats();
+       //let d = await this.db.collections();
+       //let avg = await this.collection;
+       //console.log(avg)
+
+       console.log(stats)
+
+       let data = {
+        TITLE: name,
+        INDEXES: indexes,
+        DOCUMENTS: countDocuments
+       };
+
+       console.log(data);
+
+       return data;
+    }
+
+    async getCollections() {
+        let RC = await this.db.listCollections().toArray();
+        let arCollections = [];
+
+        RC.forEach(async collection => {
+            let mdb = new MongoDB(collection.name);
+            arCollections.push(await mdb.getCollectionInfo());
+        });
+        //return result;
+    }
+
     async set(props = {}) {
+        if(!this.collection)
+            return {};
+
         let id = 0;
         let controllData = this.controll.preparePost(props);
 
@@ -81,7 +121,9 @@ export default class MongoDB
      * @param {*} collectionName 
      * @param {*} _id 
      */
-    async remove(_id) {         
+    async remove(_id) {  
+        if(!this.collection)
+            return {};       
         await this.collection.deleteOne({_id: new ObjectId(_id)});
         return true;
     }
@@ -95,6 +137,9 @@ export default class MongoDB
      * @returns 
      */
     async get(filter = {}, select = [], limit = 0, pageCount = 0) {
+        if(!this.collection)
+            return {};
+
         let query = [];
         let options = {};
         let arResult = [];
@@ -143,8 +188,6 @@ export default class MongoDB
             }
         }
 
-        console.log(sim);
-
         return {
             schema: this.schema,
             data: data,
@@ -153,6 +196,9 @@ export default class MongoDB
     }
 
     async findSimilar(data = []) {
+        if(!this.collection)
+            return {};
+
         let newData = data;
 
         data.forEach(async (item, i) => {

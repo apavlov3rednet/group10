@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import Form from "../form/Form.jsx";
 import Table from "../table/Table.jsx";
+import Index from "../index/Index.jsx";
 
 export default function Container({ curPath }) 
 {
@@ -27,6 +28,8 @@ export default function Container({ curPath })
         <div className="container">
             {collectName && <Form arValue={row} nameForm={collectName}></Form> }
             {collectName && <Table onChange={handle} nameTable={collectName}></Table>}
+
+            {!collectName && <Index/>}
         </div>
     )
 }

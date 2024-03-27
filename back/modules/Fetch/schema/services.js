@@ -33,6 +33,7 @@ const services = {
         sort: true,
         editable: true,
         step: 10,
+        sim: 'TOTAL'
     },
     COUNT: {
         type: 'Number',
@@ -42,6 +43,7 @@ const services = {
         sort: true,
         editable: true,
         step: 1,
+        sim: 'TOTAL'
     },
     TOTAL: {
         type: 'Number',
@@ -50,6 +52,10 @@ const services = {
         loc: "Сумма",
         sort: true,
         editable: true,
+        readOnly: true,
+        method: 'MULTIPLY',
+        fields: [ 'PRICE', 'COUNT' ],
+        mask: '#VAL1# * #VAL2#'
     },
 }
 

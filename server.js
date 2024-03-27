@@ -31,7 +31,15 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({ extended : true}));
 
 //GET request
+//Constant requests
+app.get('/api/get/collections/', async (rew, res) => {
+    let mdb = new Fetch.MongoDB();
+    let result = await mdb.getCollections();
+    res.end(result);
+});
 
+
+//Variable requests
 app.get('/api/:CollectionName/', async (req, res) => { // http://localhost:8000/api/getListMenu/?id=lskdlskdf&dfsdfsdf=kdkd
     let mdb = new Fetch.MongoDB(req.params.CollectionName.toLowerCase()),
         result = {},
