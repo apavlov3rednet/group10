@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import lang from './lang.js';
 import Logo from '../../images/logo.png';
 import './style.css';
 import Menu from '../menu/Menu.jsx';
@@ -24,6 +25,7 @@ export default function Header({ curPath }) {
     )
 
     return (
+        <>
         <header>
             <div className='LogoGroup'>
             <img src={Logo} width="30px" alt='' />
@@ -37,5 +39,12 @@ export default function Header({ curPath }) {
                 </div> 
                 
         </header>
+
+        <h1>
+            {curPath != "" && lang[curPath]}
+            {curPath === "" && lang.index}
+        </h1>
+        </>
+        
     )
 }

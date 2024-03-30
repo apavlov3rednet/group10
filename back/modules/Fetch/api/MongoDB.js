@@ -60,39 +60,6 @@ export default class MongoDB
         return false;
     }
 
-    async getCollectionInfo() {
-        let name = this.collection.namespace;
-       let indexes = (await this.collection.indexes()).length;
-       let countDocuments = await this.collection.countDocuments();
-       let stats = await this.collection.stats();
-       //let d = await this.db.collections();
-       //let avg = await this.collection;
-       //console.log(avg)
-
-       console.log(stats)
-
-       let data = {
-        TITLE: name,
-        INDEXES: indexes,
-        DOCUMENTS: countDocuments
-       };
-
-       console.log(data);
-
-       return data;
-    }
-
-    async getCollections() {
-        let RC = await this.db.listCollections().toArray();
-        let arCollections = [];
-
-        RC.forEach(async collection => {
-            let mdb = new MongoDB(collection.name);
-            arCollections.push(await mdb.getCollectionInfo());
-        });
-        //return result;
-    }
-
     async set(props = {}) {
         if(!this.collection)
             return {};
@@ -225,4 +192,30 @@ export default class MongoDB
 
         return true;
     }
+
+    async getCollectionsStats() {
+        let result = [];
+        let sources = await this.db.listCollections().toArray();
+
+        for(const source of sources) {
+            const mdb = new MongoDB(source.name);
+            const data = await mdb.getCollectionInfo();
+            result.push(data);
+        }
+
+        return result;
+    }
+
+    async getCollectionInfo() {
+        let _this = this;
+
+        return new Promise(async resolve => {
+            resolve({
+                TITLE: _this.collection.namespace,
+                INDEXES: (await _this.collection.indexes()).length,
+                DOCUMENTS: await _this.collection.countDocuments()
+            });
+        });
+
+    } 
 }

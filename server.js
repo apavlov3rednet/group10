@@ -34,8 +34,9 @@ app.use(express.urlencoded({ extended : true}));
 //Constant requests
 app.get('/api/get/collections/', async (rew, res) => {
     let mdb = new Fetch.MongoDB();
-    let result = await mdb.getCollections();
-    res.end(result);
+    await mdb.getCollectionsStats().then(result=>{
+        res.end(JSON.stringify(result));
+    });
 });
 
 
