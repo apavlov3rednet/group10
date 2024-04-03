@@ -3,18 +3,23 @@ import config from "../../params/config.js";
 import './style.css';
 
 
-export default function Table({nameTable, onChange}) {
+export default function Table({nameTable, onChange, query = ''}) {
     const [table, setTable] = useState({
         header: [],
         body: [],
         sim: {}
     });
     const [loading, setLoading] = useState(false);
-    const [query, setQuery] = useState('');
 
     const fetchTable = useCallback(async () => {
         setLoading(true);
-        const response = await fetch(config.api+ nameTable +'/' + query);
+        let urlRequest = config.api+ nameTable +'/';
+
+        if(query != '') {
+            urlRequest += '?q=' + query;
+        }
+
+        const response = await fetch(urlRequest);
         let answer = await response.json();
 
         const data = {
@@ -124,18 +129,8 @@ export default function Table({nameTable, onChange}) {
         )
     }
 
-    function searchEvent(event) {
-        let field = event.target;
-        let value = field.value;
-
-        setQuery('?q=' + value);
-    }
-
     return (
         <>
-        <label>
-            <input placeholder="Начните вводить поиск..." onChange={searchEvent}/>
-        </label>
         <table className='simple-table'>
             <thead>
                 {!loading && getHeader(table.header)}

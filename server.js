@@ -42,20 +42,20 @@ app.get('/api/get/collections/', async (rew, res) => {
 
 //Variable requests
 app.get('/api/:CollectionName/', async (req, res) => { // http://localhost:8000/api/getListMenu/?id=lskdlskdf&dfsdfsdf=kdkd
-    let mdb = new Fetch.MongoDB(req.params.CollectionName.toLowerCase()),
-        result = {},
-        filter = {},
-        select = [],
-        limit = false,
-        skip = false;
+    let mdb = new Fetch.MongoDB(req.params.CollectionName.toLowerCase());
+    let options = {};
 
     if(req.query) {
         if(req.query.id) {
-            filter._id = new ObjectId(req.query.id);
+            options.filter._id = new ObjectId(req.query.id);
+        }
+
+        if(req.query.q != '') {
+            options.search = req.query.q;
         }
     }
 
-    result = await mdb.get(filter, select, limit, skip);
+    let result = await mdb.get(options);
     res.end(JSON.stringify(result));
 });
 

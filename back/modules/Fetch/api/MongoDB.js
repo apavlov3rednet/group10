@@ -103,29 +103,37 @@ export default class MongoDB
      * @param {*} pageCount 
      * @returns 
      */
-    async get(filter = {}, select = [], limit = 0, pageCount = 0) {
+    async get(options = {}) {
         if(!this.collection)
             return {};
 
-        let query = [];
-        let options = {};
-        let arResult = [];
+        //Дефолтный фильтр по идентификатору
+        let filter = options.filter ? options.filter : {};
 
-        if(select.length > 0) {
-            let arSelect = {};
-            for( let key of select) {
-                arSelect[key] = 1;
+        //Поисковый запрос
+        if(options.search && options.search.length > 1) {
+            let arLine = options.search.split(' ').join('|');
+
+            let query = new RegExp(arLine);
+            let xor = [];
+            
+            for(let index in this.schema) {
+                let item = this.schema[index];
+
+                if(item.searchable) {
+                    let el = {};
+                    el[index] = { $regex : query, $options: 'i'};
+                    xor.push(el)
+                }
             }
-            query.push(arSelect); // request = [filter, arSelect];
+
+            filter = {
+                $or: [...xor]
+            }
         }
 
-        if(limit > 0)
-            options.limit = limit;
 
-        if(pageCount > 0)
-            options.skip = pageCount;
-
-        let unPrepResult = await this.collection.find(filter, { query, ...options }).toArray();
+        let unPrepResult = await this.collection.find(filter).toArray();
 
         let data = Controll.prepareData(unPrepResult, this.schema);
         let simId = {};
