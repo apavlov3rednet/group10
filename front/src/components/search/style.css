@@ -24,6 +24,19 @@
     cursor:pointer;
 }
 
+.overlay {
+    position: fixed;
+    top:0;
+    right:0;
+    bottom: 0;
+    left: -99999px;
+    display:none;
+    opacity:0;
+    z-index:10;
+    background: rgba(0,0,0,.8);
+    transition: opacity .3s ease-in;
+}
+
 .modal {
     opacity:0;
     left: -99999px;
@@ -34,14 +47,16 @@
     margin:auto;
     background: #fff;
     border:1px solid #ccc;
-    width:300px;
+    width:600px;
     height:200px;
     overflow: hidden;
+    z-index: 11;
     box-shadow: 10px 5px 20px rgba(0,0,0,.2);
     transition: opacity .3s ease-in;
 }
 
-.modal.show {
+.modal.show,
+.overlay.show {
     opacity:1;
     left:0;
     display:block;
@@ -75,5 +90,37 @@
     top: -7px;
     left: 0;
     right: 0;
-    
+}
+
+.modal form {
+    margin:15px;
+
+}
+
+.modal form label {
+    width:100%;
+    gap:15px;
+    display:flex;
+}
+
+.modal form .rangeGroup {
+    width: 33.333%;
+}
+
+.modal form .rangeGroup input {
+    width:100%;
+    margin-bottom:10px;
+}
+
+.modal form .rangeGroup datalist {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size:10px;
+    width:100%;
+}
+
+.modal form .rangeGroup datalist .curValue {
+    font-size:12px;
+    font-weight: bold;
 }

@@ -212,7 +212,7 @@ export default function Form({nameForm, arValue}) {
     }
 
     return (
-        <form method='POST' action={url} onChange={checkRequired}>
+        <form className='editForm' method='POST' action={url} onChange={checkRequired}>
             <input type='hidden' name='collection' value={nameForm}/>
             { renderForm(schema, formValue) }
 

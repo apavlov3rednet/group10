@@ -47,11 +47,18 @@ app.get('/api/:CollectionName/', async (req, res) => { // http://localhost:8000/
 
     if(req.query) {
         if(req.query.id) {
+            options.filter = {};
             options.filter._id = new ObjectId(req.query.id);
         }
 
         if(req.query.q != '') {
             options.search = req.query.q;
+        }
+
+        if(req.query.min || req.query.max) {
+            options.sort = {};
+            options.sort.min = req.query.min ? req.query.min : 0;
+            options.sort.max = req.query.max ? req.query.max : 900000000000;
         }
     }
 

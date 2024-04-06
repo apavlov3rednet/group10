@@ -33,7 +33,7 @@ export default function Container({ curPath })
 
     return (
         <div className="container">
-            {collectName && <Search onChange={handleSearch}/> }
+            {collectName && <Search onChange={handleSearch} nameCollection={collectName}/> }
             {collectName && <Form arValue={row} nameForm={collectName}></Form> }
             {collectName && <Table onChange={handle} nameTable={collectName} query={query}></Table>}
 

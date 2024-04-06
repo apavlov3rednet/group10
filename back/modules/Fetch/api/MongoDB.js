@@ -109,6 +109,7 @@ export default class MongoDB
 
         //Дефолтный фильтр по идентификатору
         let filter = options.filter ? options.filter : {};
+        let unPrepResult;
 
         //Поисковый запрос
         if(options.search && options.search.length > 1) {
@@ -132,8 +133,28 @@ export default class MongoDB
             }
         }
 
+        //min & max
+        //this.collection.find().sort( {KEY:  -1}).limit(1).toArray();
+        if(options.sort) {
+            if(options.sort.max) {
+                options.sort.key = -1;
+                options.sort.name = options.sort.max;
+            }
 
-        let unPrepResult = await this.collection.find(filter).toArray();
+            if(options.sort.min) {
+                options.sort.key = 1;
+                options.sort.name = options.sort.min;
+            }
+        }
+
+        if(options.sort && options.sort.key) {
+            let sort = {};
+            sort[options.sort.name] = options.sort.key;
+            unPrepResult = await this.collection.find().sort(sort).limit(1).toArray();
+        }
+        else {
+            unPrepResult = await this.collection.find(filter).toArray();
+        }
 
         let data = Controll.prepareData(unPrepResult, this.schema);
         let simId = {};

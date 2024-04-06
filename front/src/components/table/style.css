@@ -1,5 +1,6 @@
 .simple-table {
     margin: 10px auto;
+    height: fit-content;
 }
 
 .simple-table thead tr th {
