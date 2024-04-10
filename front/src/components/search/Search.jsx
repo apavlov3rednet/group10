@@ -1,11 +1,19 @@
 import { useCallback, useEffect, useState } from 'react';
 import config from '../../params/config.js';
+import DatePicker from 'react-datepicker';
 import './style.css';
+import "react-datepicker/dist/react-datepicker.css";
+import { registerLocale } from  "react-datepicker";
+import { ru } from 'date-fns/locale/ru';
+registerLocale('ru-RU', ru);
 
 export default function Search({ onChange, nameCollection }) {
     const [schema, setSchema] = useState({});
     const [min, setMin] = useState(0);
     const [max, setMax] = useState(0);
+    const [step, setStep] = useState(0);
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(null);
 
     useEffect(
         () => {
@@ -23,25 +31,34 @@ export default function Search({ onChange, nameCollection }) {
                     }
 
                     if(element.filter && element.type === 'Number') {
-                        let min = await fetch(config.api + nameCollection + '?min=' + key);
-                        let minValue = await min.json();
-                        let max = await fetch(config.api + nameCollection + '?max=' + key);
-                        let maxValue = await max.json();
+                        let minRequest = await fetch(config.api + nameCollection + '?min=' + key);
+                        let minValue = await minRequest.json();
+                        let maxRequest = await fetch(config.api + nameCollection + '?max=' + key);
+                        let maxValue = await maxRequest.json();
 
                         answer[key].limits = {
                             min: minValue.data[0][key],
                             max: maxValue.data[0][key]
                         }
+
+                        setStep(parseInt(element.step));
+                        setMin(minValue.data[0][key]);
+                        setMax(minValue.data[0][key] + step);
                     }
                 }
 
-                console.log(answer);
                 setSchema(answer);
             }
             
             fetchSchema();
         }, [nameCollection]
     );
+
+    function onChangeDates(dates) {
+        const [start, end] = dates;
+        setStartDate(start);
+        setEndDate(end);
+    };
 
     function inputEvent(event) {
         onChange(event.target.value);
@@ -57,23 +74,28 @@ export default function Search({ onChange, nameCollection }) {
 
     function changeValue(event) {
         let field = event.target;
-        let parent = field.closest('label');
+        let parent = field.closest('.label');
         let key = field.id.split('_');
 
         if(key[1] === 'MIN') {
+            //Получаем поле "до"
             let obSim = parent.querySelector('#' + key[0] + '_MAX');
 
+            //Если значение "от" больше значения "до"
             if(obSim.value <= field.value) {
-                let maxValue = parseInt(field.value) + parseInt(obSim.step);
+                //расчитываем значение "до" + шаг
+                let maxValue = parseInt(field.value) + step;
 
+                //Запрещаем ставить значение "до" больше существующего максимума
                 if(maxValue > parseInt(field.max)) {
                     maxValue = parseInt(field.max);
                 }
                 setMax(maxValue);
             }
-
+ 
+            //Устанавливаем значение "от" минус шаг, если близко к максимуму
             if(field.value >= field.max) {
-                setMin(parseInt(field.value) - parseInt(field.step))
+                setMin(parseInt(field.value) - step)
             }
             else {
                 setMin(field.value);
@@ -82,7 +104,23 @@ export default function Search({ onChange, nameCollection }) {
 
         if(key[1] === 'MAX') {
             let obSim = parent.querySelector('#' + key[0] + '_MIN');
-            setMax(field.value);
+
+            if(field.value <= obSim.value) {
+                let minValue = parseInt(field.value) - step;
+
+                if(minValue < parseInt(obSim.min)) {
+                    setMin(obSim.min);
+                }
+
+                setMin(minValue);
+            }
+
+            if(field.value > field.min) {
+                setMax(field.value);
+            }
+            else {
+                setMax(parseInt(field.value) + step);
+            }
         }
     }
 
@@ -97,6 +135,10 @@ export default function Search({ onChange, nameCollection }) {
                     case 'Number':
                         newRow.field = 'range';
                     break;
+
+                    case 'Date':
+                        newRow.field = 'datepicker';
+                    break;
                 }
 
                 formElements.push(newRow);
@@ -106,50 +148,75 @@ export default function Search({ onChange, nameCollection }) {
         return (
             <>
                 {
-                    formElements.map((item, index) => (     
-                        <label key={index}> 
-                            <span>{item.loc} </span>
-                            <div className='rangeGroup'>
-                                от: 
-                                <input type={item.field} 
-                                    required={item.require && true}
-                                    step={item.step ? item.step : null} 
-                                    min={item.limits.min}
-                                    max={item.limits.max}
-                                    defaultValue={min}
-                                    value={min}
-                                    list={item.code + '_MIN'}
-                                    id={item.code + '_MIN'}
-                                    name={item.code + '[MIN]'} 
-                                    onChange={changeValue}/>
-                                <datalist id={item.code + '_MIN'}>
-                                    <option value={item.limits.min} label={item.limits.min}></option>
-                                    <option className='curValue' defaultValue={min} label={min}></option>
-                                    <option value={item.limits.max} label={item.limits.max}></option>
-                                </datalist>
-                            </div>
+                    formElements.map((item, index) => (   
+                        <>
+                        {   item.field === 'range' &&
+                            <div className='label' key={index}> 
+                                <span>{item.loc} </span>
+                                <div className='rangeGroup'>
+                                    от: 
+                                    <input type={item.field} 
+                                        required={item.require && true}
+                                        step={item.step ? item.step : null} 
+                                        min={item.limits.min}
+                                        max={item.limits.max}
+                                        defaultValue={min}
+                                        value={min}
+                                        list={item.code + '_MIN'}
+                                        id={item.code + '_MIN'}
+                                        name={item.code + '[FROM]'} 
+                                        onChange={changeValue}/>
+                                    <datalist id={item.code + '_MIN'}>
+                                        <option value={item.limits.min} label={item.limits.min}></option>
+                                        <option className='curValue' defaultValue={min} label={min}></option>
+                                        <option value={item.limits.max} label={item.limits.max}></option>
+                                    </datalist>
+                                </div>
 
-                            <div className='rangeGroup'>
-                                до: 
-                                <input type={item.field} 
-                                    required={item.require && true}
-                                    step={item.step ? item.step : null} 
-                                    min={item.limits.min}
-                                    max={item.limits.max}
-                                    defaultValue={max}
-                                    value={max}
-                                    list={item.code + '_MAX'}
-                                    id={item.code + '_MAX'}
-                                    name={item.code + '[MAX]'}
-                                    onChange={changeValue} />
-                                <datalist id={item.code + '_MAX'}>
-                                    <option value={item.limits.min} label={item.limits.min}></option>
-                                    <option className='curValue' defaultValue={max} label={max}></option>
-                                    <option value={item.limits.max} label={item.limits.max}></option>
-                                </datalist>
-                            </div> 
+                                <div className='rangeGroup'>
+                                    до: 
+                                    <input type={item.field} 
+                                        required={item.require && true}
+                                        step={item.step ? item.step : null} 
+                                        min={item.limits.min}
+                                        max={item.limits.max}
+                                        defaultValue={max}
+                                        value={max}
+                                        list={item.code + '_MAX'}
+                                        id={item.code + '_MAX'}
+                                        name={item.code + '[TO]'}
+                                        onChange={changeValue} />
+                                    <datalist id={item.code + '_MAX'}>
+                                        <option value={item.limits.min} label={item.limits.min}></option>
+                                        <option className='curValue' defaultValue={max} label={max}></option>
+                                        <option value={item.limits.max} label={item.limits.max}></option>
+                                    </datalist>
+                                </div> 
+                                
+                            </div>
+                        }
+
+                        {
+                            item.field === 'datepicker' && 
+                            <div className='label'>
+                                <span>{item.loc}</span>
+                                <DatePicker
+                                    selected={startDate}
+                                    onChange={onChangeDates}
+                                    startDate={startDate}
+                                    endDate={endDate}
+                                    locale='ru-RU'
+                                    dateFormat="dd.MM.yyyy"
+                                    selectsRange
+                                    inline
+                                    />
+
+                                <input type='hidden' name={item.code + '[FROM]'} defaultValue={new Date(startDate)} />
+                                <input type='hidden' name={item.code + '[TO]'} defaultValue={new Date(endDate)} />
+                            </div>
                             
-                        </label>
+                        }
+                        </>
                     ))
 
                     
@@ -172,6 +239,8 @@ export default function Search({ onChange, nameCollection }) {
             <div className='modal-head'>Фильтр <button onClick={toggleFilter}></button></div>
             <form method='GET'>
                 {renderFilter(schema)}
+                <input type="hidden" name="filter" value="Y"/>
+                <button>Отфильтровать</button>
             </form>
         </div>
         <div className='overlay' onClick={toggleFilter}/>

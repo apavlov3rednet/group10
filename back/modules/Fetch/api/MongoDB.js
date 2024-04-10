@@ -108,6 +108,7 @@ export default class MongoDB
             return {};
 
         //Дефолтный фильтр по идентификатору
+        let _this = this;
         let filter = options.filter ? options.filter : {};
         let unPrepResult;
 
@@ -118,8 +119,8 @@ export default class MongoDB
             let query = new RegExp(arLine);
             let xor = [];
             
-            for(let index in this.schema) {
-                let item = this.schema[index];
+            for(let index in _this.schema) {
+                let item = _this.schema[index];
 
                 if(item.searchable) {
                     let el = {};
@@ -147,6 +148,33 @@ export default class MongoDB
             }
         }
 
+        //filter custom 
+        if(options.filter.filter === 'Y') {
+            filter = {};
+            for (let i in options.filter) {
+                let el = options.filter[i];
+                let from, to;
+
+
+                if(i === 'filter')
+                    continue;
+                
+                switch(_this.schema[i].type) {
+                    case 'Number':
+                        from = parseInt(el.FROM);
+                        to = parseInt(el.TO);
+                    break;
+
+                    case 'Date':
+                        from = new Date(el.FROM);
+                        to = new Date(el.TO);
+                    break;
+                }
+
+                filter[i] = { $gte: from, $lte: to }
+            }
+        }
+
         if(options.sort && options.sort.key) {
             let sort = {};
             sort[options.sort.name] = options.sort.key;
@@ -156,7 +184,7 @@ export default class MongoDB
             unPrepResult = await this.collection.find(filter).toArray();
         }
 
-        let data = Controll.prepareData(unPrepResult, this.schema);
+        let data = Controll.prepareData(unPrepResult, _this.schema);
         let simId = {};
         let sim = {};
 
@@ -185,7 +213,7 @@ export default class MongoDB
         }
 
         return {
-            schema: this.schema,
+            schema: _this.schema,
             data: data,
             sim: sim
         };

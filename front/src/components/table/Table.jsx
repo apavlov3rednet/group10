@@ -13,10 +13,16 @@ export default function Table({nameTable, onChange, query = ''}) {
 
     const fetchTable = useCallback(async () => {
         setLoading(true);
+        const getRequest = window.location.search;
+        console.log(getRequest);
         let urlRequest = config.api+ nameTable +'/';
 
         if(query != '') {
             urlRequest += '?q=' + query;
+        }
+
+        if(getRequest != '' && query == '') {
+            urlRequest += getRequest;
         }
 
         const response = await fetch(urlRequest);

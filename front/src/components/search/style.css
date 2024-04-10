@@ -48,7 +48,7 @@
     background: #fff;
     border:1px solid #ccc;
     width:600px;
-    height:200px;
+    height:fit-content;
     overflow: hidden;
     z-index: 11;
     box-shadow: 10px 5px 20px rgba(0,0,0,.2);
@@ -97,7 +97,7 @@
 
 }
 
-.modal form label {
+.modal form div.label {
     width:100%;
     gap:15px;
     display:flex;

@@ -11,7 +11,7 @@ const app = express();
 
 const PORT = 8000;
 
-app.use(morgan(':method :url :status :res[content-lenght] - :response-time ms'));
+//app.use(morgan(':method :url :status :res[content-lenght] - :response-time ms'));
 
 app.use((req, res, next) => {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -46,8 +46,9 @@ app.get('/api/:CollectionName/', async (req, res) => { // http://localhost:8000/
     let options = {};
 
     if(req.query) {
+        options.filter = {};
+
         if(req.query.id) {
-            options.filter = {};
             options.filter._id = new ObjectId(req.query.id);
         }
 
@@ -60,7 +61,14 @@ app.get('/api/:CollectionName/', async (req, res) => { // http://localhost:8000/
             options.sort.min = req.query.min ? req.query.min : 0;
             options.sort.max = req.query.max ? req.query.max : 900000000000;
         }
+
+        if(req.query.filter === 'Y') {
+            for (let i in req.query) {
+                options.filter[i] = req.query[i]
+            }
+        }
     }
+
 
     let result = await mdb.get(options);
     res.end(JSON.stringify(result));
