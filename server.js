@@ -62,6 +62,12 @@ app.get('/api/:CollectionName/', async (req, res) => { // http://localhost:8000/
             options.sort.max = req.query.max ? req.query.max : 900000000000;
         }
 
+        if(req.query.sort && req.query.order) {
+            options.sort = {};
+            options.sort.field = req.query.sort;
+            options.sort.order = req.query.order;
+        }
+
         if(req.query.filter === 'Y') {
             for (let i in req.query) {
                 options.filter[i] = req.query[i]

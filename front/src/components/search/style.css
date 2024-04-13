@@ -47,7 +47,7 @@
     margin:auto;
     background: #fff;
     border:1px solid #ccc;
-    width:600px;
+    width:fit-content;
     height:fit-content;
     overflow: hidden;
     z-index: 11;
@@ -123,4 +123,29 @@
 .modal form .rangeGroup datalist .curValue {
     font-size:12px;
     font-weight: bold;
+}
+
+.modal .buttons {
+    display:flex;
+    gap:30px;
+    justify-content: space-between;
+    margin-top:20px;
+}
+
+.modal .buttons button {
+    background: #1976d2;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: bold;
+    border: none;
+    padding: 12px 15px;
+    cursor: pointer;
+}
+
+.modal .buttons button:hover {
+    background: #1e88e5;
+}
+.modal .buttons button:disabled {
+    background:#999;
+    cursor:not-allowed;
 }

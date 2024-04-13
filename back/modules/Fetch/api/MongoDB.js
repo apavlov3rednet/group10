@@ -140,11 +140,19 @@ export default class MongoDB
             if(options.sort.max) {
                 options.sort.key = -1;
                 options.sort.name = options.sort.max;
+                options.sort.limit = 1;
             }
 
             if(options.sort.min) {
                 options.sort.key = 1;
                 options.sort.name = options.sort.min;
+                options.sort.limit = 1;
+            }
+
+            if(options.sort.field && options.sort.order) {
+                options.sort.key = (options.sort.order === 'ASC') ? 1 : -1;
+                options.sort.name = options.sort.field;
+                options.sort.limit = 100;
             }
         }
 
@@ -178,7 +186,7 @@ export default class MongoDB
         if(options.sort && options.sort.key) {
             let sort = {};
             sort[options.sort.name] = options.sort.key;
-            unPrepResult = await this.collection.find().sort(sort).limit(1).toArray();
+            unPrepResult = await this.collection.find().sort(sort).limit(options.sort.limit).toArray();
         }
         else {
             unPrepResult = await this.collection.find(filter).toArray();

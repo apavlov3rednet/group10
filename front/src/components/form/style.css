@@ -43,7 +43,7 @@ form.editForm select option {
 form.editForm button {
     background: #1976d2;
     color: #fff;
-    text-transform.editForm: uppercase;
+    text-transform: uppercase;
     font-weight: bold;
     border: none;
     padding: 12px 15px;

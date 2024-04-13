@@ -124,6 +124,12 @@ export default function Search({ onChange, nameCollection }) {
         }
     }
 
+    function clearFilter(event) {
+        event.preventDefault();
+        let curPage = window.location;
+        document.location.href = curPage.origin + curPage.pathname;
+    }
+
     function renderFilter(data = {}) {
         let formElements = [];
         for(let i in data) {
@@ -240,7 +246,12 @@ export default function Search({ onChange, nameCollection }) {
             <form method='GET'>
                 {renderFilter(schema)}
                 <input type="hidden" name="filter" value="Y"/>
+                
+                <div className='buttons'>
                 <button>Отфильтровать</button>
+                <button onClick={clearFilter}>Очистить</button>
+                </div>
+                
             </form>
         </div>
         <div className='overlay' onClick={toggleFilter}/>

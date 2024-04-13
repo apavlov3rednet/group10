@@ -25,16 +25,7 @@ export default function Table({nameTable, onChange, query = ''}) {
             urlRequest += getRequest;
         }
 
-        const response = await fetch(urlRequest);
-        let answer = await response.json();
-
-        const data = {
-            header: answer.schema,
-            body: answer.data,
-            sim: answer.sim
-        }
-
-        setTable(data);
+        await getFetch(urlRequest);
         setLoading(false);
     }, [nameTable, onChange, query])
 
@@ -44,8 +35,40 @@ export default function Table({nameTable, onChange, query = ''}) {
         }, [fetchTable] 
     )
 
-    function setSort(key) {
-        console.log(key)
+    async function getFetch(url) {
+        const response = await fetch(url);
+        let answer = await response.json();
+
+        const data = {
+            header: answer.schema,
+            body: answer.data,
+            sim: answer.sim
+        }
+
+        setTable(data);
+    }
+
+    async function setSort(event) {
+        let th = event.target;
+        let parent = th.closest('tr');
+        let allTh = parent.querySelectorAll('th');
+        let order = th.classList.contains('DESC') ? 'DESC' : 'ASC';
+        let code = th.dataset.code;
+        let url = config.api+ nameTable +'/?sort=' + code + '&order=' + order;
+
+        th.classList.add(order);
+
+        await getFetch(url);
+
+        if(order === 'ASC') {
+            th.classList.add('DESC');
+            th.classList.remove('ASC');
+        }
+        else {
+            th.classList.remove('DESC');
+            th.classList.add('ASC');
+        }
+
     }
 
     async function dropElement(key) {
@@ -72,11 +95,15 @@ export default function Table({nameTable, onChange, query = ''}) {
     function getHeader(schema) {
         let header = [];
         for(let i in schema) {
+            let obHeader = schema[i];
+
+            obHeader.code = i;
+
             if(i === '_id') {
                 header.push({loc: 'ID'})
             }
             else {
-                header.push(schema[i])
+                header.push(obHeader)
             }
         }
 
@@ -88,6 +115,7 @@ export default function Table({nameTable, onChange, query = ''}) {
                     header.map((item, index) => (
                         <th key={index} 
                         className={item.sort ? 'sortable' : null}
+                        data-code={item.code}
                         onClick={item.sort ? setSort : null}>
                             {item.loc}
                             </th>
