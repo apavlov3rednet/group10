@@ -23,3 +23,9 @@ akk github apavlov3rednet
     Софт:
     - https://www.mongodb.com/try/download/shell - шелл монгодб
     - https://www.mongodb.com/try/download/compass - компасс монгодб (ГУИ)
+
+
+Скачиваем файлы
+- back/
+- front/
+- все файлы в корне
